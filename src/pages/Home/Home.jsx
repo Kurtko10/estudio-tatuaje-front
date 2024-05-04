@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from 'react-bootstrap';
 import SocialIcons from "../../components/SocialIcons/SocialIcons";
+import Button from "../../components/ButtonCita/ButtonCita";
 
 import "./Home.css";
 
@@ -16,7 +17,7 @@ const images =["","",""];
 const timeInterval = 5000;
 
 useEffect(()=>{
-    
+
     const sections = document.querySelectorAll('.section');
     const handleNavLinkClick = (event) =>{
         event.prevenDefault();
@@ -57,7 +58,7 @@ useEffect(()=>{
     return (
         <div>
           <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
-          {/* <Button className="button-cita" text="<  Pedir Cita  >" /> */}
+          <Button className="button-cita" text="<  Pedir Cita  >" />
           {/* <ScrollToTop smooth className="scrollToTop" /> */}
           <div id="home" className="section container-fluid d-flex justify-content-center align-items-center">
           
