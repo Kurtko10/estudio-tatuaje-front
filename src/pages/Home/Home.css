@@ -1,0 +1,113 @@
+.home-page {
+    width: 100%;
+  }
+.section {
+    height: 100vh;
+    overflow-y: auto;
+    max-width: 100%;
+    justify-content: center;
+  }
+  
+  #home {
+    border: 2px outset gray;
+    margin-top: 3em;
+    margin-left: 2.5%;
+    margin-right: 5%;
+    max-width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    background-color: rgba(255, 255, 255, 0.548);
+    color: rgb(70, 0, 0);
+  }
+  
+  .box {
+    cursor: pointer;
+    background-color: rgba(111, 111, 111, 0.558);  
+    position: relative;
+    width: 100%; 
+    height: 70vh;
+    border-radius: 15px;
+    border: 3px outset grey;
+    overflow: hidden;
+  }
+  .box:hover{
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border: 4px outset rgb(187, 0, 0);
+  }
+  .box img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; 
+    left: 0; 
+    opacity: 1;
+    transition: opacity 0.3s ease, transform 0.8s ease;
+  }
+  .box:hover img {
+    transform: scale(1.1); 
+    transition: 3s ease;
+  }
+  
+  .box img:first-child {
+    opacity: 1; 
+  }
+  
+  .box img:not(:first-child) {
+    opacity: 0; 
+  }
+  
+  .box img.show {
+    opacity: 1; 
+  }
+  
+  .box img.hide {
+    opacity: 0; 
+  }
+  
+  
+  
+  #studio {
+    border: 2px outset gray;
+    margin-left: 2.5%;
+    margin-right: 1.5%;
+    max-width: 100%;
+    background-size:contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    background-color: rgba(204, 0, 0, 0.866);
+    color: rgb(70, 0, 0);
+  }
+  
+  #services {
+    border: 2px outset gray;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    max-width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.866);
+    color: rgb(70, 0, 0);
+  }
+  
+  .scrollToTop {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgb(15, 0, 0);
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  
+  .scrollToTop:hover {
+    opacity: 0.7;
+  }
+  
