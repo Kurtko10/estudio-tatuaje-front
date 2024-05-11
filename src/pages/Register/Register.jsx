@@ -80,13 +80,36 @@ export const Register = () => {
     const allValid = Object.values(isValid).every((val) => val === "");
   
     if (allValid) {
-      const answer = await registerNewUserCall(credentials);
-      setMsg(answer.data.message);
-      setTimeout(() => {
+      try {
+        const answer = await registerNewUserCall(credentials);
+        setMsg(""); // Limpiar el mensaje si no hay error
         navigate("/login");
         console.log("vamos a login");
-      }, 1500);
-     
+      } catch (error) {
+        console.log("Error al registrar el usuario:", error.response.data.message);
+        setMsg("Error al registrar el usuario ");
+        setCredentials({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          password: "",
+          provincia: "",
+          isActive: true,
+        });
+        setIsValidContent({
+          firstName: "",
+          lastName: "",
+          phone: "",
+          provincia: "",
+          email: "",
+          password: ""
+        });
+        
+        setTimeout(() => {
+          setMsg("");
+        }, 4000);
+      }
     } else {
       console.log("Credenciales incorrectas, algún campo no está bien introducido");
     }
