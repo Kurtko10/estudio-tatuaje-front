@@ -1,17 +1,10 @@
 .pagination-container {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap !important;
     margin-top: 20px;
   }
-  
-  .pagination-button {
-    border: 1px solid black;
-    margin: 0 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .pagination-button.active {
-    background-color: rgb(165, 165, 255);
-    color: white;
+
+  .active>.page-link, .page-link.active{
+    background-color: brown;
   }
