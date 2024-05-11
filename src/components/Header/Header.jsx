@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Header.css";
 
 function Header() {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   const [activeLink, setActiveLink] = useState("");
   const [scrollTimeout, setScrollTimeout] = useState(null);
   const location = useLocation();
@@ -20,16 +20,13 @@ function Header() {
 
   // Acceder al estado de Redux para verificar si el usuario está autenticado
   const isLoggedIn = useSelector(state => state.user.token !== "");
-
   const dispatch = useDispatch();
 
 
   const handleLogout = () => {
-    //sessionStorage.removeItem("passport");
-    //isLoggedIn(false);
+    
     console.log("Bye, Bye");
     dispatch(logout());
-
     navigate("/");
   };
 
@@ -40,22 +37,6 @@ function Header() {
       setActiveLink(section);
     }
   };
-
-  // const bringProfileHandler = async () => {
-  //   try {
-  //     const myPassport = JSON.parse(sessionStorage.getItem("passport"));
-  //     if (myPassport) {
-  //       setIsLoggedIn(true);
-  //       navigate("/profile");
-  //     } else {
-  //       setIsLoggedIn(false);
-  //       navigate("/login");
-  //     }
-  //   } catch (error) {
-  //     setErrorMessage("Error al intentar acceder al perfil del usuario.");
-  //     console.log(error);
-  //   }
-  // };
 
   const handleScroll = () => {
     if (location.pathname === "/") {
@@ -110,7 +91,7 @@ function Header() {
             <NavDropdown title="Despliégame!" id="basic-nav-dropdown">
               {isLoggedIn ? (
                 <>
-                  <NavDropdown.Item as={Link} to="profile" spy={true} smooth={true} duration={500} onClick={() => bringProfileHandler()} className={`nav-link ${activeLink === "profile" ? "active" : ""}`}>Ver Perfil
+                  <NavDropdown.Item as={Link} to="profile" spy={true} smooth={true} duration={500} onClick={() => navigate("/profile")} className={`nav-link ${activeLink === "profile" ? "active" : ""}`}>Ver Perfil
                   </NavDropdown.Item>
                   <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                 </>

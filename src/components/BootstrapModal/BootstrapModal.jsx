@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { CustomInput } from "../CusstomInput/CustomInput";
 import { updateProfile } from "../../service/apiCalls";
 import { inputValidator } from "../../utils/validator";
+import  "./BootstrapModal.css";
 
 function BootstrapModal({ profileData, token, setUserData }) {
   const [show, setShow] = useState(false);
