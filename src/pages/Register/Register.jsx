@@ -198,6 +198,8 @@ import { ButtonC } from "../../components/ButtonC/ButtonC";
 import { useEffect, useState } from "react";
 import { registerNewUserCall } from "../../service/apiCalls";
 import { inputValidator } from "../../utils/validator";
+import SocialIcons from "../../components/SocialIcons/SocialIcons";
+import Button from "../../components/ButtonCita/ButtonCita";
 
 import "./Register.css";
 
@@ -318,6 +320,8 @@ export const Register = () => {
   return (
     <div className="register-container registerElementsDesign d-flex justify-content-center align-items-center">
       <h3 className="titleRegister">Ingresa tus datos</h3>
+      <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
+      <Button className="button-cita" text="<  Pedir Cita  >" />
       {msg === "" ? (
         <>
           <CustomInput
