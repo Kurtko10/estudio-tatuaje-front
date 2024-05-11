@@ -1,0 +1,11 @@
+.login-container {
+    border:  1px black solid;
+    display: flex;
+    position: relative;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    left: 500px;
+    margin-top: 10em;
+}
