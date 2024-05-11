@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+
+#formProfile{
+    border: 2px outset black;
+    justify-content: center;
+    margin-top: 5em;
+    justify-content: center;
+    background-color: rgba(185, 185, 185, 0.821);
+    color: black;
+    font-family: "Jersey 10", sans-serif;
+}
+.input-design[disabled] {
+    background-color: white !important;
+    font-size: 1.2em;
+    text-align: center;
+    border-color: grey;
+  }
+  .form-label{
+    color: black;
+    font-size: 1.2em;
+  }
+  .profile-container {
+    display: flex;
+    width: 40%;
+    height: auto;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    margin-left: 30%;
+}

@@ -45,15 +45,31 @@ export const userSlice = createSlice({
                 ...state,
                 vecesLogeado: 0
             }
-        }
+        },
+        setUserData: (state, action) => {
+            state.userData = action.payload;
+          }
     }
-})
+});
 
 // exportamos las acciones a las que accederemos a través del useDispatch para escribir en el almacén
-export const {login, logout, resetCount} = userSlice.actions
+export const {login, logout, resetCount, setUserData} = userSlice.actions
+
+export const fetchUserProfile = (token) => async (dispatch) => {
+    try {
+      const profileData = await bringProfile(token);
+      dispatch(setUserData(profileData.data));
+    } catch (error) {
+      console.log("Error al obtener el perfil:", error);
+      // Manejo del error
+    }
+  };
+
 
 // definimos y exportamos los métodos que nos permitirán venir al almacén a leer información
 export const getUserData = (state) => state.user
+
+export const selectUserData = (state) => state.user.userData;
 export const getLoggedAmount = (state) => state.user.vecesLogeado
 
 // método que nos dice si el usuario logeado es admin o no para uso en rutas de admins

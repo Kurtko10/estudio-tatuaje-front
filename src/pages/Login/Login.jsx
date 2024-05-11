@@ -162,7 +162,7 @@ const Login = () => {
         dispatch(login({ token: answer.data.token, decodificado: uDecodificado })); // Dispatch de la acción de inicio de sesión
         setMsg(`${uDecodificado.userName}, bienvenid@ de nuevo.`);
         setTimeout(() => {
-          navigate("/");
+          navigate("/profile");
           console.log(uDecodificado);
           console.log("Token:", answer.data.token);
         }, 3000);
