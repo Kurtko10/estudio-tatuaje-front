@@ -75,10 +75,11 @@ export const Login = () => {
 
     return (
         <div className="login-container loginElementsDesign d-flex justify-content-center align-items-center">
+          <h3 className="titleLogin">Ingesa tus credenciales</h3>
           <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
           <Button className="button-cita" text="<  Pedir Cita  >" />
           {msg === "" ? (
-            <>
+              <>
               <CustomInput
                 typeProp={"email"}
                 nameProp={"email"}
