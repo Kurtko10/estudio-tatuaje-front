@@ -68,7 +68,7 @@ function Header() {
   }, [location.pathname]);
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary navbar-with-background navbar-with-border">
+    <Navbar expand="lg" className="bg-body-tertiary navbar-with-background navbar-with-border ms-auto">
       <Container className="container-fluid">
       <Navbar.Brand href="/">
   <img 

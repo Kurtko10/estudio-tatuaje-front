@@ -73,5 +73,5 @@ export const selectUserData = (state) => state.user.userData;
 export const getLoggedAmount = (state) => state.user.vecesLogeado
 
 // método que nos dice si el usuario logeado es admin o no para uso en rutas de admins
-export const amIAdmin =(state) => state.user.decodificado.role === "ADMIN"
+export const amIAdmin =(state) => state.user.decodificado.userRole === "admin"
 export default userSlice.reducer;

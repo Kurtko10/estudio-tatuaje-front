@@ -1,5 +1,5 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+
 
   .navbar-with-background::before {
     content: "";
@@ -45,7 +45,11 @@
     font-style: normal;
     font-size: 1.5em;
     color: black;
-    background-color: rgba(255, 255, 255, 0.387);
+    
+    
+  }
+  .navbar-nav{
+    margin-left: 25%;
   }
 
   .nav-link:hover{
