@@ -13,15 +13,20 @@ import "./Header.css";
 
 function Header() {
   
+  const dispatch = useDispatch();
+  
   const [activeLink, setActiveLink] = useState("");
   const [scrollTimeout, setScrollTimeout] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
+
+
   // Acceder al estado de Redux para verificar si el usuario está autenticado
   const isLoggedIn = useSelector(state => state.user.token !== "");
-  const dispatch = useDispatch();
-
+  
+       // Obtener la información del usuario desde el estado de Redux
+ const userData = useSelector(state => state.user);
 
   const handleLogout = () => {
     
@@ -60,12 +65,16 @@ function Header() {
     }
   }, [location.pathname, scrollTimeout]);
 
+
   useEffect(() => {
-    const myPassport = JSON.parse(sessionStorage.getItem("passport"));
-    if (myPassport) {
-      setIsLoggedIn(true);
+    if (isLoggedIn) {
+      
+      console.log( userData.decodificado.userRole);
+        
     }
-  }, [location.pathname]);
+  }, [isLoggedIn]);
+
+  
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary navbar-with-background navbar-with-border ms-auto">
@@ -89,22 +98,23 @@ function Header() {
             <Nav.Link as={Link} to="contact" spy={true} smooth={false} duration={1500} onClick={() => handleNavLinkClick("contact")} className={`nav-link ${activeLink === "contact" ? "active" : ""}`}>Contacto</Nav.Link>
             <Nav.Link as={Link} to="reviews" spy={true} smooth={false} duration={1500} onClick={() => handleNavLinkClick("reviews")} className={`nav-link ${activeLink === "reviews" ? "active" : ""}`}>Reseñas</Nav.Link>
             <NavDropdown title="Despliégame!" id="basic-nav-dropdown">
-              {isLoggedIn ? (
-                <>
-                  <NavDropdown.Item as={Link} to="profile" spy={true} smooth={true} duration={500} onClick={() => navigate("/profile")} className={`nav-link ${activeLink === "profile" ? "active" : ""}`}>Ver Perfil
-                  </NavDropdown.Item>
-                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-                </>
-              ) : (
-                <>
-                  <NavDropdown.Item href="/login" className={location.pathname === "/login" ? "active" : ""}>
-                    Login
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/register" className={location.pathname === "/register" ? "active" : ""}>
-                    Register
-                  </NavDropdown.Item>
-                </>
-              )}
+            {isLoggedIn ? (
+        <>
+          <NavDropdown.Item as={Link} to="profile" spy={true} smooth={true} duration={500} onClick={() => navigate("/profile")} className={`nav-link ${activeLink === "profile" ? "active" : ""}`}>
+          {userData.decodificado.userRole === "admin" ? "ADMIN" : "Ver Perfil"}
+          </NavDropdown.Item>
+          <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+        </>
+) : (
+  <>
+    <NavDropdown.Item href="/login" className={location.pathname === "/login" ? "active" : ""}>
+      Login
+    </NavDropdown.Item>
+    <NavDropdown.Item href="/register" className={location.pathname === "/register" ? "active" : ""}>
+      Register
+    </NavDropdown.Item>
+  </>
+)}
             </NavDropdown>
           </Nav>
           <div className="arrow"></div>
