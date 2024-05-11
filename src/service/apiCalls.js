@@ -28,6 +28,17 @@ export const bringProfile = async (token) => {
   return res;
   
 };
+// Editar perfil
+export const updateProfile = async (data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+  const res = await axios.put(`${API_URL}/api/users/profile`, data, config)
+  console.log(res, "yo soy updateProfile")
+  return res
+}
 
 
 // .get("url", {headers}(opcional))
