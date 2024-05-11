@@ -1,11 +1,11 @@
 .input-design {
     border-radius: 1em;
     height: 2em;
-    width: 20em;
+    width: auto;
 }
 
 .custom-input-container {
-    height: 4em;
+    height: 1.5em;
 }
 .input-error {
     border-width: 0.2em;

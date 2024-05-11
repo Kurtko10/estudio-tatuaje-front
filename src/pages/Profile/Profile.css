@@ -4,10 +4,18 @@
     border: 2px outset black;
     justify-content: center;
     margin-top: 5em;
+    margin-bottom: 0.2em;
     justify-content: center;
     background-color: rgba(185, 185, 185, 0.821);
     color: black;
     font-family: "Jersey 10", sans-serif;
+    padding: 1.5em;
+}
+.titleProfile{
+  font-family: "Jersey 10", sans-serif;
+  font-size: 2em;
+  text-decoration: underline;
+  color: black;
 }
 .input-design[disabled] {
     background-color: white !important;
@@ -16,16 +24,18 @@
     border-color: grey;
   }
   .form-label{
+    font-family: "Jersey 10", sans-serif;
     color: black;
     font-size: 1.2em;
   }
   .profile-container {
     display: flex;
-    width: 40%;
+    width: 60%;
     height: auto;
     position: absolute;
     flex-direction: column;
     align-items: center;
     justify-content: center; 
-    margin-left: 30%;
+    margin-left: 20%;
+  
 }
