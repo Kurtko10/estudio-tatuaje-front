@@ -103,7 +103,7 @@ export const Login = () => {
               />
             </>
           ) : (
-            <div>{msg}</div>
+            <div className="msg-welcome">{msg}</div>
           )}
         </div>
       );
