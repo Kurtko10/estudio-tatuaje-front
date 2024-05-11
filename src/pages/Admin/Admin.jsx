@@ -30,7 +30,7 @@ const Admin = () => {
             <Sidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
             <HomeSidebar />
         </div>
-     <h1>¡Bienvenido al Espacio del Administrador!</h1>
+     
      <p>¡Hola, {userData.decodificado.userName}! Estás en el espacio del administrador.</p>
      <p>Tu rol es: {userData.decodificado.userRole}</p>
      

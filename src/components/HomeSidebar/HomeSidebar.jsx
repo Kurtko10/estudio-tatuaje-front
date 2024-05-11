@@ -18,28 +18,28 @@ function HomeSidebar() {
         <div className='main-cards'>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>PRODUCTS</h3>
+                    <h3>CURSOS</h3>
                     <BsFillArchiveFill className='card_icon'/>
                 </div>
                 <h1>300</h1>
             </div>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>CATEGORIES</h3>
+                    <h3>ARTISTAS</h3>
                     <BsFillGrid3X3GapFill className='card_icon'/>
                 </div>
                 <h1>12</h1>
             </div>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>CUSTOMERS</h3>
+                    <h3>USUARIOS</h3>
                     <BsPeopleFill className='card_icon'/>
                 </div>
                 <h1>33</h1>
             </div>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>ALERTS</h3>
+                    <h3>MENSAJES</h3>
                     <BsFillBellFill className='card_icon'/>
                 </div>
                 <h1>42</h1>

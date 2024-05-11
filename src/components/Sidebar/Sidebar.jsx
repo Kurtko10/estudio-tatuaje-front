@@ -27,38 +27,38 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
 
         <ul className='sidebar-list'>
     <li className='sidebar-list-item'>
+        <span href="">
+            <BsGrid1X2Fill className='icon'/> <span>PANEL ADMIN</span>
+        </span>
+    </li>
+    <li className='sidebar-list-item'>
         <a href="">
-            <BsGrid1X2Fill className='icon'/> <span>Dashboard</span>
+            <BsPeopleFill className='icon'/> <span>USUARIOS</span>
         </a>
     </li>
     <li className='sidebar-list-item'>
         <a href="">
-            <BsFillArchiveFill className='icon'/> <span>Products</span>
+            <BsFillGrid3X3GapFill className='icon'/> <span>ARTISTAS</span>
         </a>
     </li>
     <li className='sidebar-list-item'>
         <a href="">
-            <BsFillGrid3X3GapFill className='icon'/> <span>Categories</span>
+            <BsListCheck className='icon'/> <span>CITAS</span>
         </a>
     </li>
     <li className='sidebar-list-item'>
         <a href="">
-            <BsPeopleFill className='icon'/> <span>Customers</span>
+            <BsFillArchiveFill className='icon'/> <span>CURSOS</span>
         </a>
     </li>
     <li className='sidebar-list-item'>
         <a href="">
-            <BsListCheck className='icon'/> <span>Inventory</span>
+            <BsMenuButtonWideFill className='icon'/> <span>MENSAJES</span>
         </a>
     </li>
     <li className='sidebar-list-item'>
         <a href="">
-            <BsMenuButtonWideFill className='icon'/> <span>Reports</span>
-        </a>
-    </li>
-    <li className='sidebar-list-item'>
-        <a href="">
-            <BsFillGearFill className='icon'/> <span>Setting</span>
+            <BsFillGearFill className='icon'/> <span>SETTING</span>
         </a>
     </li>
 </ul>
