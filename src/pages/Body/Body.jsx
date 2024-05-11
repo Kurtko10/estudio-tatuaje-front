@@ -4,6 +4,7 @@ import Login from "../Login/Login";
 import { Register } from "../Register/Register";
 import { Profile } from "../Profile/Profile";
 import { Artists } from "../Artists/Artists";
+import { Users } from "../Users/Users";
 import  Admin  from "../Admin/Admin";
 import { AdminRoute } from "../../components/AdminRoute/AdminRoute";
 
@@ -28,6 +29,7 @@ export const Body = () =>{
                 <Route path="/register" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/artists" element={<Artists />} />
+                <Route path="/users" element={<Users />} />
 
 
                 <Route path="/admin" element={<AdminRoute Component={Admin} />} />

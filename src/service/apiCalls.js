@@ -50,6 +50,17 @@ export const getAllArtists = async () => {
   }
 }; 
 
+// Mostrar todos los usuarios
+
+export const getAllUserProfiles = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/api/users`);
+    return res.data;
+  } catch (error) {
+    throw new Error("Error al obtener perfiles de usuarios desde el servidor");
+  }
+};
+
 
 
 

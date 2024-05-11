@@ -54,6 +54,14 @@ function Header() {
       );
     }
   };
+  const handleProfileClick = () => {
+    if (userData.decodificado.userRole === "admin") {
+      navigate("/admin");
+    } else {
+      // Si no es un admin, ir al perfil normalmente
+      navigate("/profile");
+    }
+  };
   
   useEffect(() => {
     if (location.pathname === "/") {
@@ -100,7 +108,7 @@ function Header() {
             <NavDropdown title="Despliégame!" id="basic-nav-dropdown">
             {isLoggedIn ? (
         <>
-          <NavDropdown.Item as={Link} to="profile" spy={true} smooth={true} duration={500} onClick={() => navigate("/profile")} className={`nav-link ${activeLink === "profile" ? "active" : ""}`}>
+          <NavDropdown.Item as={Link} to="profile" spy={true} smooth={true} duration={500} onClick={handleProfileClick} className={`nav-link ${activeLink === "profile" ? "active" : ""}`}>
           {userData.decodificado.userRole === "admin" ? "ADMIN" : "Ver Perfil"}
           </NavDropdown.Item>
           <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
