@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+
 .home-page{
   margin-top: 2em;
   position: absolute;
@@ -14,12 +16,18 @@
   
   margin-top: 3em;
   width: 85%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  
   background-color: rgba(255, 255, 255, 0.806);
   color: rgb(70, 0, 0);
+}
+.box h3, .box h5 a{
+  font-family: "Jersey 10", sans-serif;
+  color:black;
+  text-decoration: underline;
+}
+.box p{
+  color: rgb(0, 0, 0);
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .box {
@@ -106,6 +114,7 @@
 .scrollToTop:hover {
   opacity: 0.7;
 }
+
   
   
  

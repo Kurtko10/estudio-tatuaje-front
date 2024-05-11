@@ -62,8 +62,19 @@ useEffect(() => {
       <Row className="mb-4">
         <Col sm={6} className="pr-2">
           <div className="box">
-            <h3>Título 1</h3>
-            <p>Texto de la primera caja superior izquierda</p>
+            <h3>Estudio de Tatuaje en Madrid</h3>
+            <p>
+            Realizamos trabajos de máxima calidad desde 2021. RKS TATTOO, estudio de tatuajes en Madrid.
+            Tienda de tatuaje respetada por el carácter de todos nuestros artistas y por la higiene y profesionalidad que el estudio ofrece a nuestros clientes.
+            </p>
+            <p>Realizamos todo tipo de trabajos, Pircing, Covers, Black&White, Realista, etc. También realizamos eliminación de tatuajes con la última tecnología laser.</p>
+          
+            <p>Tambíen impartimos cursos de formación. ¡Tu futuro como tatuador es con nosotros!</p>
+            <p>¡Pásate a conocernos! Te asesoramos sin ningún compromiso!</p>
+            <br />
+            <h5> <a href="https://maps.app.goo.gl/Pc3Sjmkdg99h48yY9" target="_blank">Nuestros estudios de tatuaje están en Vallecas</a></h5>
+            
+
           </div>
         </Col>
         <Col sm={6} className="pl-2">
