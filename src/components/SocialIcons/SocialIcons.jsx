@@ -9,7 +9,7 @@ const SocialIcons = ({ urls }) => {
   return (
     <div className={`social-icons ${isScrolling ? "scrolled" : ""}`}>
       {urls.map((url, index) => (
-        <SocialIcon key={index} url={url} className="social-icon" />
+        <SocialIcon key={index} url={url} className="social-icon" target="_blank" />
       ))}
     </div>
   );
