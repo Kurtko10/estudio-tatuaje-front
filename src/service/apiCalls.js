@@ -38,7 +38,19 @@ export const updateProfile = async (data, token) => {
   const res = await axios.put(`${API_URL}/api/users/profile`, data, config)
   console.log(res, "yo soy updateProfile")
   return res
-}
+};
+
+// Mostrar artistas 
+export const getAllArtists = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/api//users/role/artists`);
+    return res.data;
+  } catch (error) {
+    throw new Error("Error al obtener perfiles de artistas desde el servidor");
+  }
+}; 
+
+
 
 
 // .get("url", {headers}(opcional))

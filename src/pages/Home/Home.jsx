@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import SocialIcons from "../../components/SocialIcons/SocialIcons";
 import Button from "../../components/ButtonCita/ButtonCita";
 import { Container, Row, Col } from 'react-bootstrap';
-import imgBox1 from "../../img/imgBox1.jpeg"
-import imgBox2 from "../../img/imgBox2.jpg"
-import imgBox3 from "../../img/imgBox3.jpg"
+import imgBox1 from "../../img/imgBox1.jpeg";
+import imgBox2 from "../../img/imgBox2.jpg";
+import imgBox3 from "../../img/imgBox3.jpg";
+import artistImg1 from "../../img/Burley.jpeg";
+import artistImg2 from "../../img/Jana.jpg";
+import artistImg3 from "../../img/Jared.jpg";
 
 import "./Home.css";
 
@@ -13,7 +16,9 @@ import "./Home.css";
 export const Home = () => {
   const navigate = useNavigate();
   const [imageIndex, setImageIndex] = useState(0);
+  const [artistImagesIndex, setArtistImagesIndex] = useState(0);
   const images = [imgBox1, imgBox2, imgBox3];
+  const artistImages = [artistImg1, artistImg2, artistImg3];
   const timeInterval = 5000;
 
   useEffect(() => {
@@ -43,13 +48,21 @@ export const Home = () => {
     };
   }, []);
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setImageIndex(prevIndex => (prevIndex + 1) % images.length);
-  }, timeInterval);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImageIndex(prevIndex => (prevIndex + 1) % images.length);
+    }, timeInterval);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setArtistImagesIndex(prevIndex => (prevIndex + 1) % artistImages.length);
+    }, timeInterval);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="home-page">
@@ -107,7 +120,7 @@ useEffect(() => {
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed unde perspiciatis id consectetur similique placeat eaque perferendis odio debitis repellat, sapiente labore culpa ducimus aliquid ea velit dolorum maiores ratione.</p>
       </div>
 
-      <div id="services" className="section container-fluid">
+      <div id="services" className="section container-fluid d-flex justify-content-center align-items-center">
         <h1>Servicios</h1>
         <p>Contenido de los servicios</p>
         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus unde dolore porro repellat maiores accusantium assumenda expedita? Corporis tempore commodi maiores, perferendis placeat soluta provident corrupti deserunt saepe vero repellendus?</p>
@@ -121,17 +134,42 @@ useEffect(() => {
 
       </div>
 
-      <div id="artists" className="section">
-        <h1>Artistas</h1>
-        <p>Contenido de los artistas</p>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus unde dolore porro repellat maiores accusantium assumenda expedita? Corporis tempore commodi maiores, perferendis placeat soluta provident corrupti deserunt saepe vero repellendus?</p>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed unde perspiciatis id consectetur similique placeat eaque perferendis odio debitis repellat, sapiente labore culpa ducimus aliquid ea velit dolorum maiores ratione.</p>
-        <h6>Otra parte</h6> <br />
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus unde dolore porro repellat maiores accusantium assumenda expedita? Corporis tempore commodi maiores, perferendis placeat soluta provident corrupti deserunt saepe vero repellendus?</p>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed unde perspiciatis id consectetur similique placeat eaque perferendis odio debitis repellat, sapiente labore culpa ducimus aliquid ea velit dolorum maiores ratione.</p>
-        <h6>Otra parte</h6> <br />
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus unde dolore porro repellat maiores accusantium assumenda expedita? Corporis tempore commodi maiores, perferendis placeat soluta provident corrupti deserunt saepe vero repellendus?</p>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed unde perspiciatis id consectetur similique placeat eaque perferendis odio debitis repellat, sapiente labore culpa ducimus aliquid ea velit dolorum maiores ratione.</p>
+      <div id="artists" className="section container-fluid d-flex justify-content-center align-items-center">
+      <Container fluid>
+      <Row className="mb-4">
+
+      <Col sm={6} className="pl-2">
+          <div className="box">
+            {artistImages.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`Imagen ${index + 1}`}
+                className={index === artistImagesIndex ? "show" : "hide"}
+              />
+            ))}
+          </div>
+        </Col>
+        <Col sm={6} className="pr-2">
+          <div className="box">
+            <h3>Los mejores profesionales</h3>
+            <p>
+            En nuestro estudio encontrarás a los mejores profesionales del sector, con una amplia experiencia en cualquier estilo de tatuajes.
+            </p>
+            <p>Auténticos artistas de la piel, formados en todas las técnicas del Tattoo. Nuestros colaboradores han recorrido paises como USA, Alemania, UK, Nueva Zelanda o diferentes paises de Asia para aumentar su técnica y conocimiento.</p>
+          
+            <p>Y por su puesto también están con nosotros los mejores perforadores de la piel.</p>
+            <br />
+            <p>¿Siguenos en redes para estar al día de sus trabajos!</p>
+            
+            
+
+          </div>
+        </Col>
+        
+      </Row>
+      
+    </Container>
       </div>
 
       <div id="contact" className="section container-fluid">
