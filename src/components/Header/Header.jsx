@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from "../../app/slices/userSlice";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -10,15 +12,24 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Header.css";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeLink, setActiveLink] = useState("");
   const [scrollTimeout, setScrollTimeout] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Acceder al estado de Redux para verificar si el usuario está autenticado
+  const isLoggedIn = useSelector(state => state.user.token !== "");
+
+  const dispatch = useDispatch();
+
+
   const handleLogout = () => {
-    sessionStorage.removeItem("passport");
-    setIsLoggedIn(false);
+    //sessionStorage.removeItem("passport");
+    //isLoggedIn(false);
+    console.log("Bye, Bye");
+    dispatch(logout());
+
     navigate("/");
   };
 
@@ -30,21 +41,21 @@ function Header() {
     }
   };
 
-  const bringProfileHandler = async () => {
-    try {
-      const myPassport = JSON.parse(sessionStorage.getItem("passport"));
-      if (myPassport) {
-        setIsLoggedIn(true);
-        navigate("/profile");
-      } else {
-        setIsLoggedIn(false);
-        navigate("/login");
-      }
-    } catch (error) {
-      setErrorMessage("Error al intentar acceder al perfil del usuario.");
-      console.log(error);
-    }
-  };
+  // const bringProfileHandler = async () => {
+  //   try {
+  //     const myPassport = JSON.parse(sessionStorage.getItem("passport"));
+  //     if (myPassport) {
+  //       setIsLoggedIn(true);
+  //       navigate("/profile");
+  //     } else {
+  //       setIsLoggedIn(false);
+  //       navigate("/login");
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage("Error al intentar acceder al perfil del usuario.");
+  //     console.log(error);
+  //   }
+  // };
 
   const handleScroll = () => {
     if (location.pathname === "/") {
