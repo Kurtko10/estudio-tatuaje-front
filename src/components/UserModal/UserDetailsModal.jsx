@@ -5,11 +5,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
 import { deleteUserById } from "../../service/apiCalls";
 
-export const UserDetailsModal = ({ show, userData, onClose, handleClose, role, handleArtistClick }) => {
+export const UserDetailsModal = ({ show, userData, onClose, handleCloseModal,deleteUser,onUpdate, role, handleArtistClick }) => {
   const [editedUserData, setEditedUserData] = useState(userData || {});
 
   const userReduxData = useSelector(getUserData);
   const token = userReduxData.token;
+
+  useEffect(() => {
+    setEditedUserData(userData); 
+  }, [userData]);
 
   useEffect(() => {
     if (userData) {
@@ -22,12 +26,8 @@ export const UserDetailsModal = ({ show, userData, onClose, handleClose, role, h
         setEditedUserData({});
     }
 }, [userData]);
-console.log("patata");
 
-  const handleCloseModal = () => {
-    setEditedUserData({});
-    handleClose(false);
-  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,19 +38,22 @@ console.log("patata");
   };
 
   const handleSaveChanges = () => {
-    console.log(editedUserData); // Lógica para guardar los cambios
+    onUpdate(editedUserData);
+    onClose(); 
   };
 
-  const deleteUser = async (id) => {
-    const res = await deleteUserById(id, token);
-    handleCloseModal();
-    console.log(token);
-    console.log(id);
-    console.log("patata");
-  };
+  
+
+  // const deleteUser = async (id) => {
+  //   const res = await deleteUserById(id, token);
+  //   handleCloseModal();
+  //   console.log(token);
+  //   console.log(id);
+  //   console.log("patata");
+  // };
 
   return (
-    <Modal show={show} onHide={handleCloseModal} onShow={() => handleArtistClick && handleArtistClick(userData.id)}>
+    <Modal show={show}  onHide={onClose} onShow={() => handleArtistClick && handleArtistClick(userData.id)}>
       <Modal.Header closeButton>
         <Modal.Title>Detalles del Usuario</Modal.Title>
       </Modal.Header>
@@ -80,7 +83,7 @@ console.log("patata");
                 placeholderProp="Email"
                 value={editedUserData.email || ""}
                 handlerProp={handleInputChange}
-                isDisabled={false}
+                isDisabled={true}
               />
               <CustomInput
                 typeProp="text"
@@ -114,10 +117,9 @@ console.log("patata");
       )}
       
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleCloseModal}>
-          Cerrar
-        </Button>
-        <Button variant="primary">Pedir Cita</Button>
+        
+        {role === "user" && (<Button variant="primary">Pedir Cita</Button>)}
+        
 
         {role === "admin" && (
           <>

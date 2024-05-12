@@ -10,6 +10,9 @@ import HeaderSidebar from '../../components/HeaderSidebar/HeaderSidebar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import SearchInput from "../../components/SearchInput/SearchInput";
 import { deleteUserById } from "../../service/apiCalls";
+import { updateProfile } from "../../service/apiCalls";
+import { updateUserProfile } from '../../service/apiCalls';
+import { ButtonC } from "../../components/ButtonC/ButtonC";
 
 import "./Users.css";
 
@@ -74,6 +77,7 @@ useEffect(() => {
 
   const handleCloseModal = () => {
     setSelectedUserId(null);
+    setShowModal(false);
   };
 
   const handlePageChange = (pageNumber) => {
@@ -93,12 +97,34 @@ useEffect(() => {
   };
 
   const deleteUser = async (id) => {
-    const res = await deleteUserById(id, token);
-    console.log(token);
-    console.log(id);
-    console.log("patata");
+    try {
+      const response = await deleteUserById(id, token);
+      console.log("Usuario eliminado:", response); 
+      getAllUserProfiles(token) 
+        .then(profiles => {
+          setUserProfiles(profiles);
+          setAllUserProfiles(profiles);
+          handleCloseModal(); 
+        });
+    } catch (error) {
+      console.log("Error al eliminar el usuario:", error);
+    }
   };
 
+  const updateUser = async (updatedUserData) => {
+    try {
+      const response = await updateUserProfile(updatedUserData.id, updatedUserData, token);
+      console.log("Usuario actualizado correctamente:", response.data);
+      
+      const updatedUserProfiles = userProfiles.map(user =>
+        user.id === updatedUserData.id ? { ...user, ...updatedUserData } : user
+      );
+      setUserProfiles(updatedUserProfiles);
+      setShowModal(false); 
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+    }
+  };
   useEffect(() => {
     const filteredProfiles = allUserProfiles.filter(filterUserProfiles);
     setCurrentPage(1);
@@ -139,8 +165,17 @@ useEffect(() => {
           <SearchInput value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Buscar por nombre, apellido o rol" />
           <DataTable rows={currentProfiles} columns={columns} handleUserClick={handleUserClick} />
           {selectedUserId && (
-            <UserDetailsModal show={showModal} userData={selectedUserId} onClose={() => setShowModal(false)} handleClose={handleCloseModal} deleteUser={deleteUser} token={token} role={role}/>
-          )}
+  <UserDetailsModal
+    show={showModal}
+    userData={selectedUserId}
+    onClose={() => setShowModal(false)}
+    handleClose={handleCloseModal}
+    deleteUser={deleteUser}
+    onUpdate={updateUser}
+    token={token}
+    role={role}
+  />
+)}
           <Pagination className="mt-3">
             <Pagination.First onClick={() => handlePageChange(1)} />
             <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
@@ -152,11 +187,18 @@ useEffect(() => {
             <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(userProfiles.length / profilesPerPage)} />
             <Pagination.Last onClick={() => handlePageChange(Math.ceil(userProfiles.length / profilesPerPage))} />
           </Pagination>
+          <ButtonC
+            title={"Nuevo Usuario"}
+            className={"regularButtonClass newUser"}
+            // functionEmit={}
+          />
         </div>
       </div>
     </div> 
   );
 };
+
+
 
 
 
