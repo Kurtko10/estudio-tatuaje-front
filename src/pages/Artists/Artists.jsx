@@ -31,16 +31,26 @@ export const Artists = () => {
       });
   }, []);
 
-  const handleArtistClick = async (artistId) => { 
-    try {
-      const selected = artists.find((artist) => artist.id === artistId);
-      setSelectedArtist(selected);
-      setShowModal(true);
-    } catch (error) {
-      console.log("Error fetching artist details:", error);
-      navigate("/");
+  // const handleArtistClick = async (artistId) => { 
+  //   try {
+  //     const selected = artists.find((artist) => artist.id === artistId);
+  //     setSelectedArtist(selected);
+  //     setShowModal(true);
+  //   } catch (error) {
+  //     console.log("Error fetching artist details:", error);
+  //     navigate("/");
+  //   }
+  // };
+
+  const handleArtistClick = async (artistId) => {
+    const selected = artists.find(artist => artist.id === artistId);
+    if (selected) {
+        setSelectedArtist(selected);
+        setShowModal(true);
+    } else {
+        console.log("No se encontró el artista con id:", artistId);
     }
-  };
+};
 
   const handleCloseModal = () => {
     setSelectedArtist(null);

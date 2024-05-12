@@ -11,12 +11,18 @@ export const UserDetailsModal = ({ show, userData, onClose, handleClose, role, h
   const userReduxData = useSelector(getUserData);
   const token = userReduxData.token;
 
-
-  
-  
   useEffect(() => {
-    setEditedUserData(userData || {});
-  }, [userData]);
+    if (userData) {
+        setEditedUserData({
+            ...userData,
+            ...userData.user 
+          });
+          console.log(userData);
+    } else {
+        setEditedUserData({});
+    }
+}, [userData]);
+console.log("patata");
 
   const handleCloseModal = () => {
     setEditedUserData({});
@@ -48,49 +54,72 @@ export const UserDetailsModal = ({ show, userData, onClose, handleClose, role, h
       <Modal.Header closeButton>
         <Modal.Title>Detalles del Usuario</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        {editedUserData && (
+      {role === "admin" ? (
+        <Modal.Body>
+          {editedUserData && (
+            <div>
+              <CustomInput
+                typeProp="text"
+                nameProp="firstName"
+                placeholderProp="Nombre"
+                value={editedUserData.firstName || ""}
+                handlerProp={handleInputChange}
+                isDisabled={false}
+              />
+              <CustomInput
+                typeProp="text"
+                nameProp="lastName"
+                placeholderProp="Apellido"
+                value={editedUserData.lastName || ""}
+                handlerProp={handleInputChange}
+                isDisabled={false}
+              />
+              <CustomInput
+                typeProp="text"
+                nameProp="email"
+                placeholderProp="Email"
+                value={editedUserData.email || ""}
+                handlerProp={handleInputChange}
+                isDisabled={false}
+              />
+              <CustomInput
+                typeProp="text"
+                nameProp="phone"
+                placeholderProp="Teléfono"
+                value={editedUserData.phone || ""}
+                handlerProp={handleInputChange}
+                isDisabled={false}
+              />
+            </div>
+          )}
+        </Modal.Body>
+      ) : (
+        <Modal.Body>
+          
           <div>
-            <CustomInput
-              typeProp="text"
-              nameProp="firstName"
-              placeholderProp="Nombre"
-              value={editedUserData.firstName || ""}
-              handlerProp={handleInputChange}
-              isDisabled={(role === "admin")?false : true}
-            />
-            <CustomInput
-              typeProp="text"
-              nameProp="lastName"
-              placeholderProp="Apellido"
-              value={editedUserData.lastName || ""}
-              handlerProp={handleInputChange}
-              isDisabled={(role === "admin")?false : true}
-            />
-            <CustomInput
-              typeProp="text"
-              nameProp="email"
-              placeholderProp="Email"
-              value={editedUserData.email || ""}
-              handlerProp={handleInputChange}
-              isDisabled={(role === "admin")?false : true}
-            />
-            <CustomInput
-              typeProp="text"
-              nameProp="phone"
-              placeholderProp="Teléfono"
-              value={editedUserData.phone || ""}
-              handlerProp={handleInputChange}
-              isDisabled={(role === "admin")?false : true }
-            />
+            <p>ID: {userData.id}</p>
+            <p>Nombre: {userData.user ? userData.user.firstName : userData.firstName}</p>
+            <p>Apellido: {userData.user ? userData.user.lastName : userData.lastName}</p>
+            {userData.specialty && <p>Especialidad: {userData.specialty}</p>}
+            {userData.biography && <p>Biografía: {userData.biography}</p>}
+            {userData.portfolio && <p>Portfolio: <a href={userData.portfolio} target="_blank" rel="noopener noreferrer">{userData.portfolio}</a></p>}
+            {userData.email && (
+              <>
+                <p>Email: {userData.email}</p>
+                <p>Teléfono: {userData.phone}</p>
+              </>
+            )}
           </div>
-        )}
-      </Modal.Body>
+        </Modal.Body>
+      )}
+      
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseModal}>
           Cerrar
         </Button>
-        {(role === "admin")&& (
+        <Button variant="primary">Pedir Cita</Button>
+
+        {role === "admin" && (
           <>
             <Button variant="danger" onClick={() => deleteUser(editedUserData.id)}>
               Eliminar
@@ -103,4 +132,9 @@ export const UserDetailsModal = ({ show, userData, onClose, handleClose, role, h
       </Modal.Footer>
     </Modal>
   );
+
+  
 };
+
+
+
