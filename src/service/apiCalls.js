@@ -37,6 +37,7 @@ export const updateProfile = async (data, token) => {
   }
   const res = await axios.put(`${API_URL}/api/users/profile`, data, config)
   console.log(res, "yo soy updateProfile")
+  console.log(token);
   return res
 };
 
@@ -52,14 +53,57 @@ export const getAllArtists = async () => {
 
 // Mostrar todos los usuarios
 
-export const getAllUserProfiles = async () => {
+export const getAllUserProfiles = async (token) => {
   try {
-    const res = await axios.get(`${API_URL}/api/users`);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    
+    };
+    const res = await axios.get(`${API_URL}/api/users`, config);
     return res.data;
   } catch (error) {
     throw new Error("Error al obtener perfiles de usuarios desde el servidor");
   }
 };
+
+// Mostrar usuario por ID
+
+export const getUserById = async (userId, token) => {
+  try {
+    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    
+    };
+
+    const res = await axios.get(`${API_URL}/api/users/${userId}`, config);
+    return res.data;
+  } catch (error) {
+    throw new Error("Error al obtener el usuario por ID desde el servidor");
+  }
+};
+
+export const deleteUserById = async (userId,token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  try {
+    const res = await axios.delete(`${API_URL}/api/users/${userId}`, config);
+    return res.data;
+  } catch (error) {
+    // Manejo de errores
+    console.error("Error al eliminar el usuario:", error);
+    throw error;
+  }
+};
+
 
 
 

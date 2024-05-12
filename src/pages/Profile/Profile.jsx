@@ -174,24 +174,6 @@ if (!token) {
   updateData={updateData}
 />
     <Button variant="danger" onClick={() => navigate("/appointments")}>Citas</Button>
-    <Row className="justify-content-center text-center">
-      <Col md={6}>
-        <Card>
-          <Card.Body>
-            <Card.Title>Editar perfil</Card.Title>
-            {/* Contenido de la tarjeta para el perfil del usuario */}
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={6}>
-        <Card>
-          <Card.Body>
-            <Card.Title>Citas</Card.Title>
-            {/* Contenido de la tarjeta para las citas del usuario */}
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
   </div>
 </>
     );

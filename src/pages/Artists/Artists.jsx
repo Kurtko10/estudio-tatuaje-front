@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { getAllArtists } from "../../service/apiCalls";
 import { useNavigate } from "react-router-dom";
-import { Card, Col, Row, Form } from "react-bootstrap"; // Importar componentes de tarjetas, columnas, filas y formulario de Bootstrap
+import { useSelector } from "react-redux";
+import { Card, Col, Row, Form } from "react-bootstrap"; 
 import { UserDetailsModal } from "../../components/UserModal/UserDetailsModal";
-import { UserCard } from "../../components/UsersCard/UsersCard"; // Importar el componente UserCard
+import { UserCard } from "../../components/UsersCard/UsersCard"; 
 import "./Artists.css";
 
 export const Artists = () => {
   const [artists, setArtists] = useState([]);
-  const [filteredArtists, setFilteredArtists] = useState([]); // Nuevo estado para artistas filtrados
+  const [filteredArtists, setFilteredArtists] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedArtist, setSelectedArtist] = useState(null); 
-  const [selectedStyle, setSelectedStyle] = useState(""); // Nuevo estado para estilo seleccionado
+  const [selectedStyle, setSelectedStyle] = useState(""); 
+  const [showModal, setShowModal] = useState(false);
+  const userData = useSelector(state => state.user);
+  const role= userData.decodificado.userRole
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +35,7 @@ export const Artists = () => {
     try {
       const selected = artists.find((artist) => artist.id === artistId);
       setSelectedArtist(selected);
+      setShowModal(true);
     } catch (error) {
       console.log("Error fetching artist details:", error);
       navigate("/");
@@ -84,8 +89,11 @@ export const Artists = () => {
       </Row>
       {selectedArtist && (
         <UserDetailsModal
-          userData={selectedArtist} // Cambiar a selectedArtist
-          handleClose={handleCloseModal}
+        show={showModal}
+        userData={selectedArtist}
+        handleClose={handleCloseModal}
+        role={role}
+        handleArtistClick={handleArtistClick}
         />
       )}
     </div>

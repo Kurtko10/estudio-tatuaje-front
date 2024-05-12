@@ -43,11 +43,11 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      // Lógica de validación y llamada de API para iniciar sesión
+      
       const answer = await loginCall(credentials);
       if (answer.data.token) {
         const uDecodificado = decodeToken(answer.data.token);
-        dispatch(login({ token: answer.data.token, decodificado: uDecodificado })); // Dispatch de la acción de inicio de sesión
+        dispatch(login({ token: answer.data.token, decodificado: uDecodificado })); 
         setMsg(`${uDecodificado.userName}, bienvenid@ de nuevo.`);
 
         if (uDecodificado.userRole === "admin") {

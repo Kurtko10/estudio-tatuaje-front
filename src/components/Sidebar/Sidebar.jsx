@@ -28,11 +28,11 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
         <ul className='sidebar-list'>
     <li className='sidebar-list-item'>
         <span href="">
-            <BsGrid1X2Fill className='icon'/> <span>PANEL ADMIN</span>
+            <BsGrid1X2Fill className='icon'/> <span id='textAdmin'></span>
         </span>
     </li>
     <li className='sidebar-list-item'>
-        <a href="">
+        <a href="/users">
             <BsPeopleFill className='icon'/> <span>USUARIOS</span>
         </a>
     </li>
