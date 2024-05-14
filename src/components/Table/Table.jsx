@@ -17,7 +17,7 @@ const DataTable = ({ rows, columns, handleUserClick }) => {
             {columns.map((column) => (
               <td key={`${row.id}-${column.field}`}>
                 {column.field === 'details' ? (
-                 <button onClick={() => handleUserClick(row.id)}>Ficha</button>
+                  <button onClick={() => handleUserClick(row.id, false)}>Ficha</button>
                 ) : (
                   row[column.field]
                 )}
@@ -31,4 +31,3 @@ const DataTable = ({ rows, columns, handleUserClick }) => {
 };
 
 export default DataTable;
-

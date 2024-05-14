@@ -8,6 +8,18 @@ const API_URL = "http://localhost:3010"
 export const registerNewUserCall = async (credentials) => {
     return await axios.post(`${API_URL}/api/auth/register`, credentials);
   };
+
+  // Registro nuevo usuario
+export const createNewUserCall = async (userData,token) => {
+
+  const config = {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+}
+console.log("estoy crando");
+  return await axios.post(`${API_URL}/api/users/`,userData, config);
+};
 // Login de usuario
 export const loginCall = async (credentials) => {
     // console.log(credentials);

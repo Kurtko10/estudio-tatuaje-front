@@ -96,7 +96,7 @@ const Login = () => {
           <ButtonC
             title={"Login!!"}
             className={"regularButtonClass"}
-            functionEmit={handleLogin}
+            onClick={handleLogin}
           />
         </>
       ) : (

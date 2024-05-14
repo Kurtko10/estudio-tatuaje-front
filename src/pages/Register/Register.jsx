@@ -190,7 +190,7 @@ export const Register = () => {
           <ButtonC
             title={"Registrarse"}
             className={"regularButtonClass"}
-            functionEmit={registerMe}
+            onClick={registerMe}
           />
         </>
       ) : (
