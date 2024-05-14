@@ -51,8 +51,8 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
     const newState = {
       ...formData,
       roleId: newRoleId,
-      specialty: newRoleId === '2' ? formData.specialty : '', // Reset specialty if not artist
-      provincia: newRoleId === '3' ? formData.provincia : '' // Reset provincia if not client
+      specialty: newRoleId === '2' ? formData.specialty : '', 
+      provincia: newRoleId === '3' ? formData.provincia : '' 
     };
     setFormData(newState);
   };

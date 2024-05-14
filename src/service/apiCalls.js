@@ -28,6 +28,7 @@ export const loginCall = async (credentials) => {
     return res;
 
 };
+
 // Ver perfil de usuario
 export const bringProfile = async (token) => {
   const config = {
@@ -40,6 +41,7 @@ export const bringProfile = async (token) => {
   return res;
   
 };
+
 // Editar perfil
 
 export const updateProfile = async (data, token) => {
@@ -53,25 +55,7 @@ export const updateProfile = async (data, token) => {
   console.log(token);
   return res
 };
-
-// export const updateProfile = async (data, token, userId = null) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`
-//     }
-//   };
-//   // Usar userId del parámetro si está presente, de lo contrario, usar el que está implícito en el token
-//   const endpoint = userId ? `${API_URL}/api/users/${userId}/profile` : `${API_URL}/api/users/profile`;
-//   try {
-//     const res = await axios.put(endpoint, data, config);
-//     console.log(res, "Actualización de perfil");
-//     return res;
-//   } catch (error) {
-//     console.error("Error al actualizar perfil:", error);
-//     throw error;
-//   }
-// };
-
+// Editar usuario 
 export const updateUserProfile = async (userId, userData, token) => {
   const config = {
     headers: {
@@ -80,6 +64,7 @@ export const updateUserProfile = async (userId, userData, token) => {
   };
   return axios.put(`${API_URL}/api/users/profile`, userData, config);
 };
+
 // Mostrar artistas 
 export const getAllArtists = async () => {
   try {
@@ -124,6 +109,7 @@ export const getUserById = async (userId, token) => {
   }
 };
 
+// Eliminar usuraio
 export const deleteUserById = async (userId,token) => {
   const config = {
     headers: {
