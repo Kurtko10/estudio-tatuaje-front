@@ -1,13 +1,19 @@
-import React from "react";
-import { Card, Button } from 'react-bootstrap';
+import React, { useState } from "react";
+import { Card, Button, Modal, Form } from 'react-bootstrap';
 import Pircing from "../../img/pircing.jpg";
 import Laser from "../../img/laser.jpeg";
 import BandW from "../../img/BandW.jpg";
 import Realista from "../../img/realista.jpg";
-import { deleteAppointmentById } from "../../service/apiCalls";
+import { deleteAppointmentById, updateAppointmentById } from "../../service/apiCalls";
 
 const AppointmentCard = ({ appointment, token, getAppointments }) => {
-  // Función para obtener la imagen según el tipo de servicio
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editData, setEditData] = useState({
+    datetime: appointment.datetime,
+    service: appointment.service,
+    artist: appointment.artist,
+  });
+
   const getServiceImage = (serviceName) => {
     switch (serviceName) {
       case "BlackWhite":
@@ -23,13 +29,11 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
     }
   };
 
-  // Función para formatear la fecha en formato DD/MM/AAAA
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("es-ES");
   };
 
-  // Función para formatear la hora en formato HH:MM
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString("es-ES", {
@@ -39,7 +43,7 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
   };
 
   const handleDelete = async () => {
-    if (appointment.status === 'COMPLETED') {
+    if (appointment.status === 'completada') {
       alert('No se puede eliminar una cita completada.');
       return;
     }
@@ -58,6 +62,22 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
     }
   };
 
+  const handleEdit = async () => {
+    try {
+      await updateAppointmentById(appointment.id, token, editData);
+      console.log("Cita actualizada con id:", appointment.id, appointment);
+      getAppointments();
+      setShowEditModal(false);
+    } catch (error) {
+      console.log("Error al actualizar la cita:", error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditData({ ...editData, [name]: value });
+  };
+
   return (
     <Card style={{ width: '18rem' }}>
       <Card.Img variant="top" src={getServiceImage(appointment.service.name)} />
@@ -73,11 +93,60 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
           Estado: {appointment.status}
         </Card.Text>
         {appointment.status !== 'completada' && (
-          <Button variant="danger" onClick={handleDelete}>
-            Eliminar
-          </Button>
+          <>
+            <Button variant="danger" onClick={handleDelete}>
+              Eliminar
+            </Button>
+            {new Date(appointment.datetime) > new Date() && (
+              <Button variant="warning" onClick={() => setShowEditModal(true)}>
+                Editar
+              </Button>
+            )}
+          </>
         )}
       </Card.Body>
+
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Editar Cita</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formDatetime">
+              <Form.Label>Fecha y Hora</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                name="datetime"
+                value={editData.datetime}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formService">
+              <Form.Label>Servicio</Form.Label>
+              <Form.Control
+                type="text"
+                name="service"
+                value={editData.service.name}
+                onChange={handleChange}
+                disabled={true}
+              />
+            </Form.Group>
+            <Form.Group controlId="formArtist">
+              <Form.Label>Artista</Form.Label>
+              <Form.Control
+                type="text"
+                name="artist"
+                value={editData.artist.name}
+                onChange={handleChange}
+                disabled={true}
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={handleEdit}>
+              Guardar Cambios
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Card>
   );
 };

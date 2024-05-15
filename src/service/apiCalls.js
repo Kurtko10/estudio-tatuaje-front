@@ -159,6 +159,19 @@ export const deleteAppointmentById = async (id, token) => {
   }
 };
 
+export const updateAppointmentById = async (id, token, appointmentData) => {
+  try {
+    const response = await axios.put(`${API_URL}/api/appointments/${id}`, appointmentData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 
