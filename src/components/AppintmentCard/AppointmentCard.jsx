@@ -4,14 +4,13 @@ import Pircing from "../../img/pircing.jpg";
 import Laser from "../../img/laser.jpeg";
 import BandW from "../../img/BandW.jpg";
 import Realista from "../../img/realista.jpg";
-import { deleteAppointmentById, updateAppointmentById } from "../../service/apiCalls";
 
-const AppointmentCard = ({ appointment, token, getAppointments }) => {
+const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editData, setEditData] = useState({
-    datetime: appointment.datetime,
-    service: appointment.service,
-    artist: appointment.artist,
+    datetime: "",
+    service: { name: "" },
+    artist: { name: "" }
   });
 
   const getServiceImage = (serviceName) => {
@@ -42,35 +41,23 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
     });
   };
 
-  const handleDelete = async () => {
-    if (appointment.status === 'completada') {
-      alert('No se puede eliminar una cita completada.');
-      return;
-    }
-
-    const confirmDelete = window.confirm("¿Seguro que deseas cancelar tu cita?");
-    if (!confirmDelete) {
-      return;
-    }
-
-    try {
-      await deleteAppointmentById(appointment.id, token);
-      console.log("Cita eliminada con id:", appointment.id, appointment);
-      getAppointments();
-    } catch (error) {
-      console.log("Error al eliminar la cita:", error);
-    }
+  const formatDatetimeLocal = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 16);
   };
 
-  const handleEdit = async () => {
-    try {
-      await updateAppointmentById(appointment.id, token, editData);
-      console.log("Cita actualizada con id:", appointment.id, appointment);
-      getAppointments();
-      setShowEditModal(false);
-    } catch (error) {
-      console.log("Error al actualizar la cita:", error);
-    }
+  const handleShowEditModal = () => {
+    setEditData({
+      datetime: formatDatetimeLocal(appointment.datetime),
+      service: appointment.service,
+      artist: appointment.artist,
+    });
+    setShowEditModal(true);
+  };
+
+  const handleSaveChanges = () => {
+    onEdit(appointment.id, { datetime: editData.datetime });
+    setShowEditModal(false);
   };
 
   const handleChange = (e) => {
@@ -94,11 +81,11 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
         </Card.Text>
         {appointment.status !== 'completada' && (
           <>
-            <Button variant="danger" onClick={handleDelete}>
+            <Button variant="danger" onClick={() => onDelete(appointment.id)}>
               Eliminar
             </Button>
             {new Date(appointment.datetime) > new Date() && (
-              <Button variant="warning" onClick={() => setShowEditModal(true)}>
+              <Button variant="warning" onClick={handleShowEditModal}>
                 Editar
               </Button>
             )}
@@ -127,8 +114,7 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
                 type="text"
                 name="service"
                 value={editData.service.name}
-                onChange={handleChange}
-                disabled={true}
+                disabled
               />
             </Form.Group>
             <Form.Group controlId="formArtist">
@@ -137,11 +123,10 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
                 type="text"
                 name="artist"
                 value={editData.artist.name}
-                onChange={handleChange}
-                disabled={true}
+                disabled
               />
             </Form.Group>
-            <Button variant="primary" onClick={handleEdit}>
+            <Button variant="primary" onClick={handleSaveChanges}>
               Guardar Cambios
             </Button>
           </Form>

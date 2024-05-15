@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Card, Button } from 'react-bootstrap';
-import { getAppointmentsByClientId } from "../../service/apiCalls";
+import { Form, Button } from 'react-bootstrap';
+import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById } from "../../service/apiCalls";
 import AppointmentCard from "../../components/AppintmentCard/AppointmentCard";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
@@ -19,13 +19,8 @@ const Appointments = () => {
 
   const getAppointments = async () => {
     try {
-     
-  
       const appointmentsData = await getAppointmentsByClientId(token);
-  
-      
       if (!appointmentsData || appointmentsData.length === 0) {
-        
         console.log("No hay citas para este usuario.");
         setAppointments([]);
       } else {
@@ -35,6 +30,29 @@ const Appointments = () => {
     } catch (error) {
       console.log("Error al obtener las citas del usuario:", error);
       navigate("/profile");
+    }
+  };
+
+  const handleDelete = async (appointmentId) => {
+    try {
+      const confirmDelete = window.confirm("¿Seguro que deseas cancelar tu cita?");
+      if (!confirmDelete) return;
+
+      await deleteAppointmentById(appointmentId, token);
+      console.log("Cita eliminada con id:", appointmentId);
+      getAppointments();
+    } catch (error) {
+      console.log("Error al eliminar la cita:", error);
+    }
+  };
+
+  const handleEdit = async (appointmentId, editData) => {
+    try {
+      await updateAppointmentById(appointmentId, token, { datetime: editData.datetime });
+      console.log("Cita actualizada con id:", appointmentId);
+      getAppointments();
+    } catch (error) {
+      console.log("Error al actualizar la cita:", error);
     }
   };
 
@@ -51,22 +69,6 @@ const Appointments = () => {
     return true;
   });
 
-  // Función para formatear la fecha en formato DD/MM/AAAA
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES");
-  };
-
-  // Función para formatear la hora en formato HH:MM
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("es-ES", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-  
-
   return (
     <div>
       <h1>Citas del usuario</h1>
@@ -79,19 +81,23 @@ const Appointments = () => {
         </Form.Control>
       </Form.Group>
       <div>
-  {filteredAppointments.length > 0 ? (
-    filteredAppointments.map(appointment => (
-      <AppointmentCard key={appointment.id} appointment={appointment} token={token} getAppointments={getAppointments}/>
-    ))
-  ) : (
-    <p>No hay citas {filter === 'future' ? 'futuras' : filter === 'past' ? 'pasadas' : ''}.</p>
-  )}
-</div>
+        {filteredAppointments.length > 0 ? (
+          filteredAppointments.map(appointment => (
+            <AppointmentCard 
+              key={appointment.id} 
+              appointment={appointment} 
+              onDelete={handleDelete} 
+              onEdit={handleEdit} 
+            />
+          ))
+        ) : (
+          <p>No hay citas {filter === 'future' ? 'futuras' : filter === 'past' ? 'pasadas' : ''}.</p>
+        )}
+      </div>
     </div>
   );
 };
 
 export default Appointments;
-
 
 

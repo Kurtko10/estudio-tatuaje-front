@@ -153,6 +153,7 @@ export const deleteAppointmentById = async (id, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(token);
     return response.data;
   } catch (error) {
     throw error;
