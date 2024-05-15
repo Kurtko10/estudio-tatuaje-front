@@ -144,7 +144,20 @@ export const getAppointmentsByClientId = async (token) => {
   }
 };
 
-// Eliminar usuraio
+//Eliminar cita por el usuario
+
+export const deleteAppointmentById = async (id, token) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/appointments/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 
 

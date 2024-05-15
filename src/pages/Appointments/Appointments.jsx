@@ -30,6 +30,7 @@ const Appointments = () => {
         setAppointments([]);
       } else {
         setAppointments(appointmentsData);
+        console.log(appointmentsData);
       }
     } catch (error) {
       console.log("Error al obtener las citas del usuario:", error);
@@ -64,6 +65,7 @@ const Appointments = () => {
       minute: "2-digit",
     });
   };
+  
 
   return (
     <div>

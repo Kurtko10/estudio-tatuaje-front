@@ -1,27 +1,25 @@
 import React from "react";
-import { Button, Card } from 'react-bootstrap';
-import Pircing from "../../img/pircing.jpg"
+import { Card, Button } from 'react-bootstrap';
+import Pircing from "../../img/pircing.jpg";
 import Laser from "../../img/laser.jpeg";
 import BandW from "../../img/BandW.jpg";
 import Realista from "../../img/realista.jpg";
-//import { deleteAppointment } from '../../service/apiCalls';
+import { deleteAppointmentById } from "../../service/apiCalls";
 
 const AppointmentCard = ({ appointment, token, getAppointments }) => {
   // Función para obtener la imagen según el tipo de servicio
   const getServiceImage = (serviceName) => {
-    console.log("serviceName:", serviceName); 
-    if (serviceName === "BlackWhite") {
-        console.log("B and W");
-      return BandW; 
-    } else if (serviceName === "Realista") {
-      return Realista; 
-    } else if (serviceName === "Pircing") {
-        console.log("pircing");
-      return Pircing; 
-    } else if (serviceName === "Laser") {
-      return Laser; 
-    } else {
-      return "placeholder.jpg";
+    switch (serviceName) {
+      case "BlackWhite":
+        return BandW;
+      case "Realista":
+        return Realista;
+      case "Pircing":
+        return Pircing;
+      case "Laser":
+        return Laser;
+      default:
+        return "placeholder.jpg";
     }
   };
 
@@ -40,24 +38,25 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
     });
   };
 
-  // Función para manejar la eliminación de citas
-  const handleDelete = async (appointmentId) => {
-    if (window.confirm("¿Seguro que deseas cancelar tu cita?")) {
-      try {
-        const response = await deleteAppointment(appointmentId, token);
-        getAppointments();
-      
-        console.log(response); 
-      } catch (error) {
-       
-        console.error("Error al eliminar la cita:", error.message);
-       
-      }
+  const handleDelete = async () => {
+    if (appointment.status === 'COMPLETED') {
+      alert('No se puede eliminar una cita completada.');
+      return;
+    }
+
+    const confirmDelete = window.confirm("¿Seguro que deseas cancelar tu cita?");
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      await deleteAppointmentById(appointment.id, token);
+      console.log("Cita eliminada con id:", appointment.id, appointment);
+      getAppointments();
+    } catch (error) {
+      console.log("Error al eliminar la cita:", error);
     }
   };
-
-
-  console.log("Datos de la cita:", appointment);
 
   return (
     <Card style={{ width: '18rem' }}>
@@ -70,12 +69,17 @@ const AppointmentCard = ({ appointment, token, getAppointments }) => {
           Hora: {formatTime(appointment.datetime)}
           <br />
           Artista: {appointment.artist.name}
+          <br />
+          Estado: {appointment.status}
         </Card.Text>
-        <Button variant="primary" onClick={() => handleDelete(appointment.id)}>Eliminar</Button>
+        {appointment.status !== 'completada' && (
+          <Button variant="danger" onClick={handleDelete}>
+            Eliminar
+          </Button>
+        )}
       </Card.Body>
     </Card>
   );
 };
 
 export default AppointmentCard;
-
