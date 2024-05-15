@@ -127,6 +127,26 @@ export const deleteUserById = async (userId,token) => {
   }
 };
 
+// Ver cita de un usuario 
+
+export const getAppointmentsByClientId = async (token) => {
+  try {
+     
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+      };
+      const res = await axios.get(`${API_URL}/api/appointments/client/`, config);    
+      return res.data;
+  } catch (error) {
+      throw error;
+  }
+};
+
+// Eliminar usuraio
+
+
 
 
 
