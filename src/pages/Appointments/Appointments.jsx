@@ -1,21 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from 'react-bootstrap';
-import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById } from "../../service/apiCalls";
+import { Form, Button, Modal } from 'react-bootstrap';
+import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById, createAppointment, getAllArtists, bringProfile } from "../../service/apiCalls";
 import AppointmentCard from "../../components/AppintmentCard/AppointmentCard";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
+import ButtonCita from "../../components/ButtonCita/ButtonCita";
+import { CustomInput } from "../../components/CusstomInput/CustomInput";
 
 const Appointments = () => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
-  const [filter, setFilter] = useState('future'); 
+  const [filter, setFilter] = useState('future');
+  const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false);
+  const [formData, setFormData] = useState({
+    datetime: "",
+    service_id: "",
+    artist_id: "",
+    client_id: ""
+  });
+  const [artists, setArtists] = useState([]);
+  const [filteredArtists, setFilteredArtists] = useState([]);
   const userReduxData = useSelector(getUserData);
   const token = userReduxData.token;
+  const [clientId, setClientId] = useState(null);
+  const isLoggedIn = Boolean(token);
+
+  const ArtistService = {
+    BLACKWHITE: { id: 1, name: "BlackWhite" },
+    REALISTA: { id: 2, name: "Realista" },
+    PIRCING: { id: 3, name: "Pircing" },
+    LASER: { id: 4, name: "Laser" },
+  };
 
   useEffect(() => {
+    console.log("userReduxData:", userReduxData); 
     getAppointments();
-  }, []);
+    fetchClientData();
+  }, [userReduxData]);
+
+  const fetchClientData = async () => {
+    try {
+      const profileData = await bringProfile(token);
+      const clientId = profileData.data?.clients?.id;
+      console.log("clientId:", clientId);
+      setClientId(clientId);
+    } catch (error) {
+      console.log("Error al obtener los datos del cliente:", error);
+    }
+  };
 
   const getAppointments = async () => {
     try {
@@ -69,6 +102,48 @@ const Appointments = () => {
     return true;
   });
 
+  const handleCreateAppointmentClick = () => {
+    if (isLoggedIn) {
+      if (clientId) {
+        setFormData((prevState) => ({ ...prevState, client_id: clientId }));
+        setShowNewAppointmentModal(true);
+      } else {
+        console.log("Client ID is undefined");
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleServiceChange = async (e) => {
+    const selectedService = e.target.value;
+    setFormData((prevState) => ({ ...prevState, service_id: ArtistService[selectedService.toUpperCase()].id }));
+    try {
+      const response = await getAllArtists();
+      const fetchedArtists = response[0];
+      const filtered = fetchedArtists.filter(artist => artist.specialty === selectedService);
+      setArtists(fetchedArtists);
+      setFilteredArtists(filtered);
+    } catch (error) {
+      console.log("Error fetching artists:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: name === 'artist_id' || name === 'client_id' ? Number(value) : value }));
+  };
+
+  const handleCreateAppointment = async () => {
+    try {
+      const newAppointment = await createAppointment(formData, token);
+      setAppointments([...appointments, newAppointment]);
+      setShowNewAppointmentModal(false);
+    } catch (error) {
+      console.log("Error creating appointment:", error);
+    }
+  };
+
   return (
     <div>
       <h1>Citas del usuario</h1>
@@ -80,6 +155,7 @@ const Appointments = () => {
           <option value="all">Todas</option>
         </Form.Control>
       </Form.Group>
+      <ButtonCita text="Crear Nueva Cita" onClick={handleCreateAppointmentClick} className="button-cita create-appointment-button" />
       <div>
         {filteredAppointments.length > 0 ? (
           filteredAppointments.map(appointment => (
@@ -94,10 +170,62 @@ const Appointments = () => {
           <p>No hay citas {filter === 'future' ? 'futuras' : filter === 'past' ? 'pasadas' : ''}.</p>
         )}
       </div>
+
+      <Modal show={showNewAppointmentModal} onHide={() => setShowNewAppointmentModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Crear Nueva Cita</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formClientId">
+              <Form.Label>Num. cliente</Form.Label>
+              <CustomInput
+                typeProp="text"
+                nameProp="client_id"
+                valueProp={clientId}
+                placeholderProp={clientId}
+                isDisabled={true}
+              />
+            </Form.Group>
+            <Form.Group controlId="formService">
+              <Form.Label>Servicio</Form.Label>
+              <Form.Select name="service_id" value={formData.service_id} onChange={handleServiceChange} required>
+                <option value="">Selecciona un servicio</option>
+                <option value="BlackWhite">Black & White</option>
+                <option value="Realista">Realista</option>
+                <option value="Pircing">Pircing</option>
+                <option value="Laser">Laser</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group controlId="formArtist">
+              <Form.Label>Artista</Form.Label>
+              <Form.Select name="artist_id" value={formData.artist_id} onChange={handleInputChange} required>
+                <option value="">Selecciona un artista</option>
+                {filteredArtists.map(artist => (
+                  <option key={artist.id} value={artist.id}>{artist.user.firstName} {artist.user.lastName}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group controlId="formDatetime">
+              <Form.Label>Fecha y Hora</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                name="datetime"
+                value={formData.datetime}
+                onChange={handleInputChange}
+                required
+                min={new Date().toISOString().slice(0, 16)}
+              />
+            </Form.Group>
+            <Button variant="primary" onClick={handleCreateAppointment}>
+              Crear Cita
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
 
 export default Appointments;
-
 

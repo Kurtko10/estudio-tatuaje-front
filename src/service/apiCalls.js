@@ -173,6 +173,22 @@ export const updateAppointmentById = async (id, token, appointmentData) => {
   }
 };
 
+export const createAppointment = async (appointmentData, token) => {
+  try {
+    console.log(appointmentData);
+  
+    const response = await axios.post(`${API_URL}/api/appointments`, appointmentData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(appointmentData);
+    throw error;
+  }
+};
+
 
 
 
