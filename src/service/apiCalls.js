@@ -56,7 +56,7 @@ export const updateProfile = async (data, token) => {
   return res
 };
 // Editar usuario 
-export const updateUserProfile = async (userId, userData, token) => {
+export const updateUserProfile = async (id, userData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`

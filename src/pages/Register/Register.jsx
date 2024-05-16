@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { CustomInput } from "../../components/CusstomInput/CustomInput";
 import { ButtonC } from "../../components/ButtonC/ButtonC";
@@ -59,6 +60,15 @@ export const Register = () => {
         confirmPassword: "", 
       }));
     }
+  };
+
+  const inputValidatorHandler = (e) => {
+    const { name, value } = e.target;
+    const validationError = inputValidator(value, name, name);
+    setIsValidContent((prevState) => ({
+      ...prevState,
+      [name]: validationError,
+    }));
   };
 
   useEffect(() => {
@@ -135,7 +145,7 @@ export const Register = () => {
             nameProp={"firstName"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Escribe tu nombre"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.firstName}
           />
           <CustomInput
@@ -143,7 +153,7 @@ export const Register = () => {
             nameProp={"lastName"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Escribe tu apellido"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.lastName}
           />
           <CustomInput
@@ -151,7 +161,7 @@ export const Register = () => {
             nameProp={"phone"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Escribe tu teléfono"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.phone}
           />
           <CustomInput
@@ -159,7 +169,7 @@ export const Register = () => {
             nameProp={"provincia"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Escribe tu provincia"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.provincia}
           />
           <CustomInput
@@ -167,7 +177,7 @@ export const Register = () => {
             nameProp={"email"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Escribe tu correo electrónico"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.email}
           />
           <CustomInput
@@ -175,7 +185,7 @@ export const Register = () => {
             nameProp={"password"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Escribe la contraseña"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.password}
           />
           <CustomInput
@@ -183,7 +193,7 @@ export const Register = () => {
             nameProp={"confirmPassword"}
             handlerProp={(e) => inputHandler(e)}
             placeholderProp={"Confirma la contraseña"}
-            onBlurHandler={(e) => inputValidatorHandler(e)}
+            onBlur={(e) => inputValidatorHandler(e)}
             errorText={isValidContent.confirmPassword}
           />
 

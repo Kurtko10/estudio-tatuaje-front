@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SocialIcons from "../../components/SocialIcons/SocialIcons";
 import Button from "../../components/ButtonCita/ButtonCita";
+import { ButtonC } from "../../components/ButtonC/ButtonC";
 import { Container, Row, Col } from 'react-bootstrap';
 import imgBox1 from "../../img/imgBox1.jpeg";
 import imgBox2 from "../../img/imgBox2.jpg";
@@ -162,13 +163,16 @@ export const Home = () => {
             <br />
             <p>¿Siguenos en redes para estar al día de sus trabajos!</p>
             
-            
-
           </div>
         </Col>
         
       </Row>
-      
+      <ButtonC
+            title={"ARTISTAS"}
+            className={"regularButtonClass"}
+            
+            
+          />
     </Container>
       </div>
 

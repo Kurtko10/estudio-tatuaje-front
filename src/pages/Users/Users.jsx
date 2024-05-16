@@ -1,5 +1,12 @@
+
 import React, { useState, useEffect } from "react";
-import { getAllUserProfiles, getUserById, deleteUserById, updateUserProfile, createNewUserCall } from "../../service/apiCalls";
+import {
+  getAllUserProfiles,
+  getUserById,
+  deleteUserById,
+  updateUserProfile,
+  createNewUserCall
+} from "../../service/apiCalls";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
 import { UserDetailsModal } from "../../components/UserModal/UserDetailsModal";
@@ -8,7 +15,7 @@ import DataTable from "../../components/Table/Table";
 import { Pagination } from "react-bootstrap";
 import HeaderSidebar from '../../components/HeaderSidebar/HeaderSidebar';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import HomeSidebar from "../../components/HomeSidebar/HomeSidebar"
+import HomeSidebar from "../../components/HomeSidebar/HomeSidebar";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import { ButtonC } from "../../components/ButtonC/ButtonC";
 
@@ -19,11 +26,11 @@ export const Users = () => {
 
   const [userProfiles, setUserProfiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const profilesPerPage = 5;
   const [showModal, setShowModal] = useState(false);
-  const [isCreating, setIsCreating] = useState(false)
+  const [isCreating, setIsCreating] = useState(false);
 
   const userReduxData = useSelector(getUserData);
   const token = userReduxData.token;
@@ -31,6 +38,13 @@ export const Users = () => {
   const [allUserProfiles, setAllUserProfiles] = useState([]);
   const userData = useSelector(state => state.user);
   const role = userData.decodificado.userRole;
+
+  const ArtistService = {
+    BLACKWHITE: { id: 1, name: "Black & White" },
+    REALISTA: { id: 2, name: "Realista" },
+    PIRCING: { id: 3, name: "Pircing" },
+    LASER: { id: 4, name: "Laser" },
+  };
 
   useEffect(() => {
     if (userData.decodificado.userRole !== "admin" && userData.decodificado.userRole !== "artist") {
@@ -52,17 +66,18 @@ export const Users = () => {
         console.log("Error al obtener perfiles de usuarios:", error);
         console.log(token);
       });
-  }, []);
+  }, [token]);
 
   const handleUserClick = async (userId, isCreating = false) => {
     setIsCreating(isCreating);
+    console.log(userId);
     if (isCreating) {
-      setSelectedUserId(null);
+      setSelectedUser(null);
       setShowModal(true);
     } else {
       try {
         const userData = await getUserById(userId, token);
-        setSelectedUserId(userData);
+        setSelectedUser(userData);
         setShowModal(true);
       } catch (error) {
         console.log("Error al obtener detalles del usuario:", error);
@@ -73,7 +88,7 @@ export const Users = () => {
   };
 
   const handleCloseModal = () => {
-    setSelectedUserId(null);
+    setSelectedUser(null);
     setShowModal(false);
   };
 
@@ -97,12 +112,10 @@ export const Users = () => {
     try {
       const response = await deleteUserById(id, token);
       console.log("Usuario eliminado:", response);
-      getAllUserProfiles(token)
-        .then(profiles => {
-          setUserProfiles(profiles);
-          setAllUserProfiles(profiles);
-          handleCloseModal();
-        });
+      const updatedProfiles = await getAllUserProfiles(token);
+      setUserProfiles(updatedProfiles);
+      setAllUserProfiles(updatedProfiles);
+      handleCloseModal();
     } catch (error) {
       console.log("Error al eliminar el usuario:", error);
     }
@@ -111,9 +124,12 @@ export const Users = () => {
   const createUser = async (userData) => {
     try {
       const response = await createNewUserCall(userData, token);
-      setUserProfiles([...userProfiles, response.data]);
+      const updatedProfiles = await getAllUserProfiles(token);
+      setUserProfiles(updatedProfiles);
+      setAllUserProfiles(updatedProfiles);
       setShowModal(false);
       setIsCreating(false);
+      console.log(response);
     } catch (error) {
       console.error("Error al crear el usuario:", error);
     }
@@ -121,7 +137,9 @@ export const Users = () => {
 
   const updateUser = async (updatedUserData) => {
     try {
-      const response = await updateUserProfile(updatedUserData.id, updatedUserData, token);
+      console.log(updatedUserData);
+      const payload = { ...updatedUserData, user_id: updatedUserData.id };
+      const response = await updateUserProfile(updatedUserData.id, payload, token);
       const updatedUserProfiles = userProfiles.map(user =>
         user.id === updatedUserData.id ? { ...user, ...updatedUserData } : user
       );
@@ -181,7 +199,7 @@ export const Users = () => {
           <DataTable rows={currentProfiles} columns={columns} handleUserClick={handleUserClick} />
           <UserDetailsModal
             show={showModal}
-            userData={selectedUserId}
+            userData={selectedUser}
             onClose={handleCloseModal}
             isCreating={isCreating}
             deleteUser={deleteUser}
@@ -212,4 +230,3 @@ export const Users = () => {
     </div>
   );
 };
-

@@ -1,3 +1,36 @@
+// import { inputValidator } from "../../utils/validator";
+// import "./CustomInput.css";
+
+// export const CustomInput = ({
+//   typeProp,
+//   nameProp,
+//   placeholderProp,
+//   handlerProp,
+//   onBlurHandler,
+//   value,
+//   isDisabled,
+//   errorText,
+//   disableValidation
+// }) => {
+//   return (
+//     <div className="custom-input-container">
+//       <input
+//         className={
+//           (!disableValidation && errorText === "") ? "input-design" : "input-design input-error"
+//         }
+//         type={typeProp}
+//         name={nameProp}
+//         placeholder={placeholderProp}
+//         value={value}
+//         disabled={isDisabled}
+//         onChange={(e) => handlerProp(e)}
+//         onBlur={(e) => inputValidator(e)}
+//       />
+//       {!disableValidation && <p className="error-message">{errorText}</p>}
+//     </div>
+//   );
+// };
+
 import "./CustomInput.css";
 
 export const CustomInput = ({
@@ -5,7 +38,6 @@ export const CustomInput = ({
   nameProp,
   placeholderProp,
   handlerProp,
-  onBlurHandler,
   value,
   isDisabled,
   errorText,
@@ -23,9 +55,8 @@ export const CustomInput = ({
         value={value}
         disabled={isDisabled}
         onChange={(e) => handlerProp(e)}
-        onBlurHandler={(e) => onBlurHandler(e)}
       />
-      {!disableValidation && <p className="error-message">{errorText}</p>}
+      {!disableValidation && errorText && <p className="error-message">{errorText}</p>}
     </div>
   );
 };

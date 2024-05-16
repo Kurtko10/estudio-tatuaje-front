@@ -1,12 +1,15 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal, Container, Row, Col } from 'react-bootstrap';
 import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById, createAppointment, getAllArtists, bringProfile } from "../../service/apiCalls";
 import AppointmentCard from "../../components/AppintmentCard/AppointmentCard";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
 import ButtonCita from "../../components/ButtonCita/ButtonCita";
+import SocialIcons from "../../components/SocialIcons/SocialIcons";
 import { CustomInput } from "../../components/CusstomInput/CustomInput";
+import './Appointments.css'; // Importa el archivo CSS
 
 const Appointments = () => {
   const navigate = useNavigate();
@@ -27,7 +30,7 @@ const Appointments = () => {
   const isLoggedIn = Boolean(token);
 
   const ArtistService = {
-    BLACKWHITE: { id: 1, name: "BlackWhite" },
+    BLACKWHITE: { id: 1, name: "Black & White" },
     REALISTA: { id: 2, name: "Realista" },
     PIRCING: { id: 3, name: "Pircing" },
     LASER: { id: 4, name: "Laser" },
@@ -62,7 +65,6 @@ const Appointments = () => {
       }
     } catch (error) {
       console.log("Error al obtener las citas del usuario:", error);
-      navigate("/profile");
     }
   };
 
@@ -117,11 +119,12 @@ const Appointments = () => {
 
   const handleServiceChange = async (e) => {
     const selectedService = e.target.value;
-    setFormData((prevState) => ({ ...prevState, service_id: ArtistService[selectedService.toUpperCase()].id }));
+    const serviceId = ArtistService[selectedService.toUpperCase()].id;
+    setFormData((prevState) => ({ ...prevState, service_id: serviceId }));
     try {
       const response = await getAllArtists();
       const fetchedArtists = response[0];
-      const filtered = fetchedArtists.filter(artist => artist.specialty === selectedService);
+      const filtered = fetchedArtists.filter(artist => artist.specialty.toUpperCase() === selectedService.toUpperCase());
       setArtists(fetchedArtists);
       setFilteredArtists(filtered);
     } catch (error) {
@@ -136,16 +139,16 @@ const Appointments = () => {
 
   const handleCreateAppointment = async () => {
     try {
-      const newAppointment = await createAppointment(formData, token);
-      setAppointments([...appointments, newAppointment]);
+      await createAppointment(formData, token);
       setShowNewAppointmentModal(false);
+      getAppointments(); // Reload the appointments after creating a new one
     } catch (error) {
       console.log("Error creating appointment:", error);
     }
   };
 
   return (
-    <div>
+    <div className="appointments-container">
       <h1>Citas del usuario</h1>
       <Form.Group controlId="formFilter">
         <Form.Label>Filtrar citas:</Form.Label>
@@ -156,20 +159,28 @@ const Appointments = () => {
         </Form.Control>
       </Form.Group>
       <ButtonCita text="Crear Nueva Cita" onClick={handleCreateAppointmentClick} className="button-cita create-appointment-button" />
-      <div>
+      <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
+      <Container className="appointments-list-container">
         {filteredAppointments.length > 0 ? (
-          filteredAppointments.map(appointment => (
-            <AppointmentCard 
-              key={appointment.id} 
-              appointment={appointment} 
-              onDelete={handleDelete} 
-              onEdit={handleEdit} 
-            />
-          ))
+          <Row className="justify-content-center">
+            {filteredAppointments.map(appointment => (
+              <Col key={appointment.id} md={6} lg={4}>
+                <AppointmentCard 
+                  appointment={appointment} 
+                  onDelete={handleDelete} 
+                  onEdit={handleEdit} 
+                />
+              </Col>
+            ))}
+          </Row>
         ) : (
-          <p>No hay citas {filter === 'future' ? 'futuras' : filter === 'past' ? 'pasadas' : ''}.</p>
+          <Row className="justify-content-center">
+            <Col md={6} lg={4}>
+              <p>No hay citas {filter === 'future' ? 'futuras' : filter === 'past' ? 'pasadas' : ''}.</p>
+            </Col>
+          </Row>
         )}
-      </div>
+      </Container>
 
       <Modal show={showNewAppointmentModal} onHide={() => setShowNewAppointmentModal(false)}>
         <Modal.Header closeButton>
@@ -189,12 +200,12 @@ const Appointments = () => {
             </Form.Group>
             <Form.Group controlId="formService">
               <Form.Label>Servicio</Form.Label>
-              <Form.Select name="service_id" value={formData.service_id} onChange={handleServiceChange} required>
+              <Form.Select name="service_id" value={Object.keys(ArtistService).find(key => ArtistService[key].id === formData.service_id) || ""} onChange={handleServiceChange} required>
                 <option value="">Selecciona un servicio</option>
-                <option value="BlackWhite">Black & White</option>
-                <option value="Realista">Realista</option>
-                <option value="Pircing">Pircing</option>
-                <option value="Laser">Laser</option>
+                <option value="BLACKWHITE">Black & White</option>
+                <option value="REALISTA">Realista</option>
+                <option value="PIRCING">Pircing</option>
+                <option value="LASER">Laser</option>
               </Form.Select>
             </Form.Group>
             <Form.Group controlId="formArtist">
@@ -228,4 +239,3 @@ const Appointments = () => {
 };
 
 export default Appointments;
-

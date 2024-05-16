@@ -1,10 +1,18 @@
+
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { CustomInput } from "../CusstomInput/CustomInput";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
 
-export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, onUpdate, role, isCreating }) => {
+const ArtistService = {
+  BLACKWHITE: { id: 1, name: "BlackWhite" },
+  REALISTA: { id: 2, name: "Realista" },
+  PIRCING: { id: 3, name: "Pircing" },
+  LASER: { id: 4, name: "Laser" },
+};
+
+export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, onUpdate, role, isCreating, userId }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -57,18 +65,27 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
     setFormData(newState);
   };
 
+  const handleSpecialtyChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      specialty: e.target.value
+    }));
+  };
+
   const roleSpecificFields = (roleId) => {
     switch (roleId) {
       case '2': // Artist
         return (
           <>
-            <CustomInput
-              typeProp="text"
-              nameProp="specialty"
-              placeholderProp="Especialidad"
-              value={formData.specialty}
-              handlerProp={handleInputChange}
-            />
+            <Form.Group controlId="formSpecialtySelect">
+              <Form.Label>Especialidad</Form.Label>
+              <Form.Control as="select" value={formData.specialty} onChange={handleSpecialtyChange}>
+                <option value="">Seleccione una Especialidad</option>
+                {Object.values(ArtistService).map(service => (
+                  <option key={service.id} value={service.name}>{service.name}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
           </>
         );
       case '3': // Client
@@ -101,7 +118,7 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
       return;
     }
 
-    if (userData.roleId === '2' && !userData.specialty) {
+    if (userData.roleId === 2 && !userData.specialty) {
       console.error("El campo de especialidad es necesario para los artistas");
       return;
     }
