@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Button, Modal, Container, Row, Col } from 'react-bootstrap';
 import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById, createAppointment, getAllArtists, bringProfile } from "../../service/apiCalls";
-import AppointmentCard from "../../components/AppintmentCard/AppointmentCard";
+import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
 import ButtonCita from "../../components/ButtonCita/ButtonCita";
