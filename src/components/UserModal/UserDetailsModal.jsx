@@ -146,14 +146,16 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
       </Modal.Header>
       <Modal.Body>
         <Form>
-        <CustomInput
-            typeProp="text"
-            nameProp="id"
-            placeholderProp="id"
-            value={formData.id}
-            handlerProp={handleInputChange}
-            isDisabled={true}
-          />
+        {!isCreating && (
+            <CustomInput
+              typeProp="text"
+              nameProp="id"
+              placeholderProp={`ID usuario: ${formData.id}`}
+              value={formData.id}
+              handlerProp={handleInputChange}
+              isDisabled={true}
+            />
+          )}
           <CustomInput
             typeProp="text"
             nameProp="firstName"

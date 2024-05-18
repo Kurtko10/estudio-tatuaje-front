@@ -95,11 +95,13 @@ const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
       <Card.Body className={appointment.status === 'COMPLETED' ? 'card-body-disabled' : ''}>
         <Card.Title>{appointment.service.name}</Card.Title>
         <Card.Text>
+          Id cita: {appointment.id}
+          <br />
           Fecha: {formatDate(appointment.datetime)}
           <br />
           Hora: {formatTime(appointment.datetime)}
           <br />
-          Artista: {appointment.artist.name}
+          Artista: {appointment.artist.name} 
           <br />
           Estado: {appointment.status}
         </Card.Text>

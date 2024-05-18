@@ -18,6 +18,7 @@ export const createNewUserCall = async (userData,token) => {
     }
 }
 console.log("estoy crando");
+console.log(userData);
   return await axios.post(`${API_URL}/api/users/`,userData, config);
 };
 // Login de usuario

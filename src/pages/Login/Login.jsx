@@ -74,6 +74,9 @@ const Login = () => {
       console.log(error);
     }
   };
+  const handleRegister = () => {
+    navigate("/register");
+  };
 
   return (
     <div className="login-container loginElementsDesign d-flex justify-content-center align-items-center">
@@ -102,6 +105,12 @@ const Login = () => {
             title={"Login!!"}
             className={"regularButtonClass"}
             onClick={handleLogin}
+          />
+           <div className="or-separator">o</div> {/* Añadir el separador */}
+          <ButtonC
+            title={"Regístrate"}
+            className={"smallButtonClass"}
+            onClick={handleRegister}
           />
         </>
       ) : (

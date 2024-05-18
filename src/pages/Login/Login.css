@@ -19,3 +19,33 @@
     font-family: "Jersey 10", sans-serif;
     font-size: 2em;
 }
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .or-separator {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 0;
+  }
+  
+  .smallButtonClass {
+    background-color: #007bff8f;
+    color: white;
+    border: none;
+    
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.6rem;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 1em;
+  }
+  
+  .smallButtonClass:hover {
+    background-color: #0056b3;
+  }

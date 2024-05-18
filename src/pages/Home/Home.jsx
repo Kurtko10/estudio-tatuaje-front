@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SocialIcons from "../../components/SocialIcons/SocialIcons";
-import Button from "../../components/ButtonCita/ButtonCita";
+import ButtonCita from "../../components/ButtonCita/ButtonCita";
 import { ButtonC } from "../../components/ButtonC/ButtonC";
 import { Container, Row, Col } from 'react-bootstrap';
 import imgBox1 from "../../img/imgBox1.jpeg";
@@ -68,7 +68,7 @@ export const Home = () => {
   return (
     <div className="home-page">
       <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
-      <Button className="button-cita" text="<  Pedir Cita  >" />
+      <ButtonCita text="Crear Nueva Cita" className="button-cita" showModal={true} />
       {/* <ScrollToTop smooth className="scrollToTop" /> */}
       <div id="home" className="section container-fluid d-flex justify-content-center align-items-center">
       

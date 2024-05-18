@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Button, Modal, Container, Row, Col } from 'react-bootstrap';
 import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById, createAppointment, getAllArtists, bringProfile } from "../../service/apiCalls";
 import AppointmentCard from "../../components/AppintmentCard/AppointmentCard";
@@ -13,6 +12,7 @@ import './Appointments.css'; // Importa el archivo CSS
 
 const Appointments = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [appointments, setAppointments] = useState([]);
   const [filter, setFilter] = useState('future');
   const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false);
@@ -27,7 +27,7 @@ const Appointments = () => {
   const userReduxData = useSelector(getUserData);
   const token = userReduxData.token;
   const [clientId, setClientId] = useState(null);
-  const isLoggedIn = Boolean(token);
+  const [shouldOpenModal, setShouldOpenModal] = useState(false);
 
   const ArtistService = {
     BLACKWHITE: { id: 1, name: "Black & White" },
@@ -37,10 +37,22 @@ const Appointments = () => {
   };
 
   useEffect(() => {
-    console.log("userReduxData:", userReduxData); 
     getAppointments();
     fetchClientData();
   }, [userReduxData]);
+
+  useEffect(() => {
+    if (location.state?.showModal) {
+      setShouldOpenModal(true);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (clientId && shouldOpenModal) {
+      handleCreateAppointmentClick();
+      setShouldOpenModal(false); // Reset the flag
+    }
+  }, [clientId, shouldOpenModal]);
 
   const fetchClientData = async () => {
     try {
@@ -57,11 +69,9 @@ const Appointments = () => {
     try {
       const appointmentsData = await getAppointmentsByClientId(token);
       if (!appointmentsData || appointmentsData.length === 0) {
-        console.log("No hay citas para este usuario.");
         setAppointments([]);
       } else {
         setAppointments(appointmentsData);
-        console.log(appointmentsData);
       }
     } catch (error) {
       console.log("Error al obtener las citas del usuario:", error);
@@ -74,7 +84,6 @@ const Appointments = () => {
       if (!confirmDelete) return;
 
       await deleteAppointmentById(appointmentId, token);
-      console.log("Cita eliminada con id:", appointmentId);
       getAppointments();
     } catch (error) {
       console.log("Error al eliminar la cita:", error);
@@ -84,7 +93,6 @@ const Appointments = () => {
   const handleEdit = async (appointmentId, editData) => {
     try {
       await updateAppointmentById(appointmentId, token, { datetime: editData.datetime });
-      console.log("Cita actualizada con id:", appointmentId);
       getAppointments();
     } catch (error) {
       console.log("Error al actualizar la cita:", error);
@@ -105,15 +113,11 @@ const Appointments = () => {
   });
 
   const handleCreateAppointmentClick = () => {
-    if (isLoggedIn) {
-      if (clientId) {
-        setFormData((prevState) => ({ ...prevState, client_id: clientId }));
-        setShowNewAppointmentModal(true);
-      } else {
-        console.log("Client ID is undefined");
-      }
+    if (clientId) {
+      setFormData((prevState) => ({ ...prevState, client_id: clientId }));
+      setShowNewAppointmentModal(true);
     } else {
-      navigate("/login");
+      console.log("Client ID is undefined");
     }
   };
 
@@ -213,7 +217,7 @@ const Appointments = () => {
               <Form.Select name="artist_id" value={formData.artist_id} onChange={handleInputChange} required>
                 <option value="">Selecciona un artista</option>
                 {filteredArtists.map(artist => (
-                  <option key={artist.id} value={artist.id}>{artist.user.firstName} {artist.user.lastName}</option>
+                  <option key={artist.id} value={artist.id}>{artist.user.firstName} {artist.name} </option>
                 ))}
               </Form.Select>
             </Form.Group>

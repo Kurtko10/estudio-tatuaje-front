@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   getAllUserProfiles,
@@ -68,10 +67,12 @@ export const Users = () => {
       });
   }, [token]);
 
-  const handleUserClick = async (userId,role, isCreating = false) => {
+  const handleUserClick = async (userId, isCreating = false) => {
     setIsCreating(isCreating);
     console.log(userId);
+    console.log(isCreating);
     if (isCreating) {
+      // Reset selected user to null for creating a new user
       setSelectedUser(null);
       setShowModal(true);
     } else {
@@ -232,3 +233,4 @@ export const Users = () => {
     </div>
   );
 };
+
