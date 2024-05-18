@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   getAllUserProfiles,
@@ -37,13 +38,6 @@ export const Users = () => {
   const [allUserProfiles, setAllUserProfiles] = useState([]);
   const userData = useSelector(state => state.user);
   const role = userData.decodificado.userRole;
-
-  const ArtistService = {
-    BLACKWHITE: { id: 1, name: "Black & White" },
-    REALISTA: { id: 2, name: "Realista" },
-    PIRCING: { id: 3, name: "Pircing" },
-    LASER: { id: 4, name: "Laser" },
-  };
 
   useEffect(() => {
     if (userData.decodificado.userRole !== "admin" && userData.decodificado.userRole !== "artist") {
@@ -180,14 +174,12 @@ export const Users = () => {
     { field: 'lastName', headerName: 'Last Name' },
     { field: 'email', headerName: 'Email' },
     { field: 'phone', headerName: 'Phone' },
-    {
-      field: 'details',
-      headerName: 'Details',
-      renderCell: (row) => {
-        return <button onClick={() => handleUserClick(row.id, false)}>View Details</button>;
-      },
-    },
+    { field: 'actions', headerName: 'Actions' }
   ];
+
+  const renderUserActions = (row) => (
+    <button onClick={() => handleUserClick(row.id, false)}>Ficha</button>
+  );
 
   return (
     <div className='admin'>
@@ -199,7 +191,7 @@ export const Users = () => {
         <div className="usersView">
           <h1 id="usersTitle">Lista de Usuarios</h1>
           <SearchInput value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Buscar por nombre, apellido o rol" />
-          <DataTable rows={currentProfiles} columns={columns} handleUserClick={handleUserClick} />
+          <DataTable rows={currentProfiles} columns={columns} renderActions={renderUserActions} />
           <UserDetailsModal
             show={showModal}
             userData={selectedUser}
@@ -233,4 +225,3 @@ export const Users = () => {
     </div>
   );
 };
-

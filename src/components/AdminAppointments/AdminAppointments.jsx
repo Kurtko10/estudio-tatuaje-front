@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
-import { getAllAppointments } from '../../service/apiCalls';
+import { getAllAppointments, deleteAppointmentById, updateAppointmentById, createAppointment, getAllArtists } from '../../service/apiCalls';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import DataTable from '../../components/Table/Table';
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../app/slices/userSlice';
-import CustomPagination from '../Pagination/Pagination';
+import CustomPagination from '../../components/Pagination/Pagination';
 import './AdminAppointments.css';
 
 const AdminAppointments = () => {
@@ -15,10 +15,26 @@ const AdminAppointments = () => {
   const [searchCriteria, setSearchCriteria] = useState('id');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false);
+  const [formData, setFormData] = useState({
+    datetime: "",
+    service_id: "",
+    artist_id: "",
+    client_id: ""
+  });
+  const [artists, setArtists] = useState([]);
+  const [filteredArtists, setFilteredArtists] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const userReduxData = useSelector(getUserData);
   const token = userReduxData.token;
+
+  const ArtistService = {
+    BLACKWHITE: { id: 1, name: "Black & White" },
+    REALISTA: { id: 2, name: "Realista" },
+    PIRCING: { id: 3, name: "Pircing" },
+    LASER: { id: 4, name: "Laser" },
+  };
 
   useEffect(() => {
     getAppointments();
@@ -28,7 +44,6 @@ const AdminAppointments = () => {
     try {
       const appointmentsData = await getAllAppointments(token);
       setAppointments(appointmentsData);
-      console.log(appointmentsData);
     } catch (error) {
       console.log('Error al obtener todas las citas:', error);
     }
@@ -48,8 +63,14 @@ const AdminAppointments = () => {
 
   const handleEdit = async (appointmentId, editData) => {
     try {
-      await updateAppointmentById(appointmentId, token, { datetime: editData.datetime });
+      const datetimeUTC = new Date(editData.datetime).toISOString();
+      await updateAppointmentById(appointmentId, token, {
+        datetime: datetimeUTC,
+        service_id: editData.service_id,
+        artist_id: editData.artist_id,
+      });
       getAppointments();
+      setShowModal(false);
     } catch (error) {
       console.log('Error al actualizar la cita:', error);
     }
@@ -67,9 +88,55 @@ const AdminAppointments = () => {
     setSearchCriteria(e.target.value);
   };
 
-  const handleOpenModal = (appointment) => {
-    setSelectedAppointment(appointment);
-    setShowModal(true);
+  const handleOpenModal = async (appointment, isCreating = false) => {
+    try {
+      if (!isCreating) {
+        const selectedAppointment = appointments.find(appt => appt.id === appointment.id);
+        if (selectedAppointment) {
+          const response = await getAllArtists();
+          const fetchedArtists = response[0];
+          const filtered = fetchedArtists.filter(artist => artist.specialty.toUpperCase() === selectedAppointment.service.name.toUpperCase());
+          setArtists(fetchedArtists);
+          setFilteredArtists(filtered);
+
+          const appointmentDatetime = new Date(selectedAppointment.datetime);
+          const localDatetime = new Date(appointmentDatetime.getTime() - appointmentDatetime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+
+          setSelectedAppointment({
+            ...selectedAppointment,
+            datetime: localDatetime,
+            service_id: selectedAppointment.service.id,
+            artist_id: selectedAppointment.artist.id,
+          });
+
+          setFormData({
+            datetime: localDatetime,
+            service_id: selectedAppointment.service.id,
+            artist_id: selectedAppointment.artist.id,
+            client_id: selectedAppointment.client.id,
+          });
+        }
+      } else {
+        setSelectedAppointment({
+          datetime: "",
+          service_id: "",
+          artist_id: "",
+          client_id: ""
+        });
+        setFormData({
+          datetime: "",
+          service_id: "",
+          artist_id: "",
+          client_id: ""
+        });
+        setArtists([]);
+        setFilteredArtists([]);
+      }
+      setShowModal(true);
+      setShowNewAppointmentModal(isCreating);
+    } catch (error) {
+      console.error("Error opening modal: ", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -79,6 +146,36 @@ const AdminAppointments = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  const handleServiceChange = async (e) => {
+    const selectedService = e.target.value;
+    const serviceId = ArtistService[selectedService.toUpperCase()].id;
+    setFormData(prev => ({ ...prev, service_id: serviceId }));
+    try {
+      const response = await getAllArtists();
+      const fetchedArtists = response[0];
+      const filtered = fetchedArtists.filter(artist => artist.specialty.toUpperCase() === selectedService.toUpperCase());
+      setArtists(fetchedArtists);
+      setFilteredArtists(filtered);
+    } catch (error) {
+      console.log("Error fetching artists:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: name === 'artist_id' || name === 'client_id' ? Number(value) : value }));
+  };
+
+  const handleCreateAppointment = async () => {
+    try {
+      await createAppointment(formData, token);
+      setShowNewAppointmentModal(false);
+      getAppointments();
+    } catch (error) {
+      console.log("Error creating appointment:", error);
+    }
   };
 
   const columns = [
@@ -125,8 +222,6 @@ const AdminAppointments = () => {
           return appointment.artistName.toLowerCase().includes(searchQuery.toLowerCase());
         case 'serviceName':
           return appointment.serviceName.toLowerCase().includes(searchQuery.toLowerCase());
-        case 'datetime':
-          return appointment.datetime.includes(searchQuery);
         default:
           return false;
       }
@@ -159,7 +254,6 @@ const AdminAppointments = () => {
             <option value="clientName">Cliente</option>
             <option value="artistName">Artista</option>
             <option value="serviceName">Servicio</option>
-            <option value="datetime">Fecha (DD/MM/AA)</option>
           </Form.Control>
         </Form.Group>
         <SearchInput
@@ -167,33 +261,106 @@ const AdminAppointments = () => {
           value={searchQuery}
           onChange={handleSearchChange}
         />
-        <DataTable rows={paginatedAppointments} columns={columns} handleUserClick={handleOpenModal} />
+        <DataTable
+          rows={paginatedAppointments}
+          columns={columns}
+          handleUserClick={(row) => handleOpenModal(row, false)}
+          renderActions={(row) => (
+            <div className="action-buttons">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => handleOpenModal(row, false)}
+              >
+                Editar
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleDelete(row.id)}
+              >
+                Borrar
+              </Button>
+            </div>
+          )}
+        />
         <CustomPagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
+        <Button variant="success" className="mt-3" onClick={() => handleOpenModal(null, true)}>
+          Crear Nueva Cita
+        </Button>
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Detalles de la Cita</Modal.Title>
+            <Modal.Title>{showNewAppointmentModal ? "Crear Nueva Cita" : "Detalles de la Cita"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {selectedAppointment && (
               <Form>
+                {showNewAppointmentModal && (
+                  <Form.Group controlId="formClientId">
+                    <Form.Label>ID Cliente</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="client_id"
+                      value={formData.client_id}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </Form.Group>
+                )}
                 <Form.Group controlId="formDatetime">
                   <Form.Label>Fecha y Hora</Form.Label>
                   <Form.Control
                     type="datetime-local"
                     name="datetime"
-                    value={selectedAppointment.datetime}
-                    onChange={(e) => setSelectedAppointment({ ...selectedAppointment, datetime: e.target.value })}
+                    value={formData.datetime}
+                    onChange={handleInputChange}
                     required
                     min={new Date().toISOString().slice(0, 16)}
                   />
                 </Form.Group>
-                <Button variant="primary" onClick={() => handleEdit(selectedAppointment.id, selectedAppointment)}>
-                  Guardar Cambios
-                </Button>
+                <Form.Group controlId="formService">
+                  <Form.Label>Servicio</Form.Label>
+                  <Form.Select 
+                    name="service_id" 
+                    value={formData.service_id} 
+                    onChange={handleServiceChange} 
+                    required 
+                    disabled={!showNewAppointmentModal}
+                  >
+                    <option value="">Selecciona un servicio</option>
+                    <option value="BLACKWHITE">Black & White</option>
+                    <option value="REALISTA">Realista</option>
+                    <option value="PIRCING">Pircing</option>
+                    <option value="LASER">Laser</option>
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group controlId="formArtist">
+                  <Form.Label>Artista</Form.Label>
+                  <Form.Select 
+                    name="artist_id" 
+                    value={formData.artist_id} 
+                    onChange={handleInputChange} 
+                    required 
+                    disabled={!showNewAppointmentModal}
+                  >
+                    {filteredArtists.map(artist => (
+                      <option key={artist.id} value={artist.id}>{artist.user.firstName} {artist.name}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+                {showNewAppointmentModal ? (
+                  <Button variant="primary" onClick={handleCreateAppointment}>
+                    Crear Cita
+                  </Button>
+                ) : (
+                  <Button variant="primary" onClick={() => handleEdit(selectedAppointment.id, formData)}>
+                    Guardar Cambios
+                  </Button>
+                )}
               </Form>
             )}
           </Modal.Body>

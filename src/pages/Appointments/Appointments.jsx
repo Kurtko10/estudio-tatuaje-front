@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Button, Modal, Container, Row, Col } from 'react-bootstrap';
 import { getAppointmentsByClientId, deleteAppointmentById, updateAppointmentById, createAppointment, getAllArtists, bringProfile } from "../../service/apiCalls";
-import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
+import AppointmentCard from "../../components/AppintmentCard/AppointmentCard";
 import { useSelector } from 'react-redux';
 import { getUserData } from "../../app/slices/userSlice";
 import ButtonCita from "../../components/ButtonCita/ButtonCita";
 import SocialIcons from "../../components/SocialIcons/SocialIcons";
 import { CustomInput } from "../../components/CusstomInput/CustomInput";
-import './Appointments.css'; // Importa el archivo CSS
+import './Appointments.css'; 
 
 const Appointments = () => {
   const navigate = useNavigate();
@@ -145,7 +145,7 @@ const Appointments = () => {
     try {
       await createAppointment(formData, token);
       setShowNewAppointmentModal(false);
-      getAppointments(); // Reload the appointments after creating a new one
+      getAppointments(); 
     } catch (error) {
       console.log("Error creating appointment:", error);
     }
