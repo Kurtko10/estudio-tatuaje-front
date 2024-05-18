@@ -4,6 +4,7 @@ import Pircing from "../../img/pircing.jpg";
 import Laser from "../../img/laser.jpeg";
 import BandW from "../../img/BandW.jpg";
 import Realista from "../../img/realista.jpg";
+import "./AppointmentCard.css"
 
 const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
   const [showEditModal, setShowEditModal] = useState(false);
@@ -65,10 +66,33 @@ const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
     setEditData({ ...editData, [name]: value });
   };
 
+  const isInProgress = (appointmentDate) => {
+    const now = new Date();
+    const appointmentDay = new Date(appointmentDate);
+    return (
+      now.getFullYear() === appointmentDay.getFullYear() &&
+      now.getMonth() === appointmentDay.getMonth() &&
+      now.getDate() === appointmentDay.getDate()
+    );
+  };
+
+  const getCardClass = () => {
+    switch (appointment.status) {
+      case "COMPLETED":
+        return "completed";
+      case "PENDING":
+        return "pending";
+      case "IN_PROGRESS":
+        return isInProgress(appointment.datetime) ? "in-progress" : "";
+      default:
+        return "";
+    }
+  };
+
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card className={getCardClass()} style={{ width: '18rem' }}>
       <Card.Img variant="top" src={getServiceImage(appointment.service.name)} />
-      <Card.Body>
+      <Card.Body className={appointment.status === 'COMPLETED' ? 'card-body-disabled' : ''}>
         <Card.Title>{appointment.service.name}</Card.Title>
         <Card.Text>
           Fecha: {formatDate(appointment.datetime)}
@@ -79,17 +103,13 @@ const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
           <br />
           Estado: {appointment.status}
         </Card.Text>
-        {appointment.status !== 'completada' && (
-          <>
-            <Button variant="danger" onClick={() => onDelete(appointment.id)}>
-              Eliminar
-            </Button>
-            {new Date(appointment.datetime) > new Date() && (
-              <Button variant="warning" onClick={handleShowEditModal}>
-                Editar
-              </Button>
-            )}
-          </>
+        <Button variant="danger" onClick={() => onDelete(appointment.id)} disabled={appointment.status === 'COMPLETED'}>
+          Eliminar
+        </Button>
+        {appointment.status !== 'COMPLETED' && new Date(appointment.datetime) > new Date() && (
+          <Button variant="warning" onClick={handleShowEditModal}>
+            Editar
+          </Button>
         )}
       </Card.Body>
 
