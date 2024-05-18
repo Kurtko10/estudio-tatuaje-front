@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { CustomInput } from "../CusstomInput/CustomInput";
@@ -12,14 +11,16 @@ const ArtistService = {
   LASER: { id: 4, name: "Laser" },
 };
 
-export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, onUpdate, role, isCreating, userId }) => {
+export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, onUpdate, role, isCreating }) => {
   const [formData, setFormData] = useState({
+    id: '',
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     password: '',
     roleId: '',
+    roleName: '',
     isActive: true,
     specialty: '',
     provincia: ''
@@ -31,18 +32,24 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
   useEffect(() => {
     if (isCreating) {
       setFormData({
+        id: '',
         firstName: '',
         lastName: '',
         email: '',
         phone: '',
         password: '12345678',
         roleId: '',
+        roleName: '',
         isActive: true,
         specialty: '',
         provincia: ''
       });
-    } else {
-      setFormData(userData || {});
+    } else if (userData) {
+      setFormData({
+        ...userData,
+        roleId: userData.role ? userData.role.id : '',
+        roleName: userData.role ? userData.role.name : '',
+      });
     }
   }, [isCreating, userData]);
 
@@ -59,8 +66,8 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
     const newState = {
       ...formData,
       roleId: newRoleId,
-      specialty: newRoleId === '2' ? formData.specialty : '', 
-      provincia: newRoleId === '3' ? formData.provincia : '' 
+      specialty: newRoleId === '2' ? formData.specialty : '',
+      provincia: newRoleId === '3' ? formData.provincia : ''
     };
     setFormData(newState);
   };
@@ -139,6 +146,14 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
       </Modal.Header>
       <Modal.Body>
         <Form>
+        <CustomInput
+            typeProp="text"
+            nameProp="id"
+            placeholderProp="id"
+            value={formData.id}
+            handlerProp={handleInputChange}
+            isDisabled={true}
+          />
           <CustomInput
             typeProp="text"
             nameProp="firstName"
@@ -168,25 +183,38 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
             value={formData.phone}
             handlerProp={handleInputChange}
           />
+          
           {isCreating && (
+            <>
+              <CustomInput
+                typeProp="password"
+                nameProp="password"
+                placeholderProp="Contraseña"
+                value={formData.password}
+                handlerProp={handleInputChange}
+              />
+              <Form.Group controlId="formRoleSelect">
+                <Form.Label>Rol</Form.Label>
+                <Form.Control as="select" value={formData.roleId} onChange={handleRoleChange}>
+                  <option value="">Seleccione un Rol</option>
+                  <option value="1">Admin</option>
+                  <option value="2">Artist</option>
+                  <option value="3">Client</option>
+                </Form.Control>
+                {roleSpecificFields(formData.roleId)}
+              </Form.Group>
+            </>
+          )}
+          {!isCreating && (
             <CustomInput
-              typeProp="password"
-              nameProp="password"
-              placeholderProp="Contraseña"
-              value={formData.password}
+              typeProp="text"
+              nameProp="roleName"
+              placeholderProp="Rol"
+              value={formData.roleName}
               handlerProp={handleInputChange}
+              isDisabled={true}
             />
           )}
-          <Form.Group controlId="formRoleSelect">
-            <Form.Label>Rol</Form.Label>
-            <Form.Control as="select" value={formData.roleId} onChange={handleRoleChange}>
-              <option value="">Seleccione un Rol</option>
-              <option value="1">Admin</option>
-              <option value="2">Artist</option>
-              <option value="3">Client</option>
-            </Form.Control>
-            {roleSpecificFields(formData.roleId)}
-          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>

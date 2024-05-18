@@ -68,7 +68,7 @@ export const Users = () => {
       });
   }, [token]);
 
-  const handleUserClick = async (userId, isCreating = false) => {
+  const handleUserClick = async (userId,role, isCreating = false) => {
     setIsCreating(isCreating);
     console.log(userId);
     if (isCreating) {
@@ -77,6 +77,8 @@ export const Users = () => {
     } else {
       try {
         const userData = await getUserById(userId, token);
+        console.log(userData);
+        console.log(userData.role.name);
         setSelectedUser(userData);
         setShowModal(true);
       } catch (error) {
@@ -137,7 +139,7 @@ export const Users = () => {
 
   const updateUser = async (updatedUserData) => {
     try {
-      console.log(updatedUserData);
+      console.log(updatedUserData.id);
       const payload = { ...updatedUserData, user_id: updatedUserData.id };
       const response = await updateUserProfile(updatedUserData.id, payload, token);
       const updatedUserProfiles = userProfiles.map(user =>

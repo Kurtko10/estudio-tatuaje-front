@@ -56,13 +56,14 @@ export const updateProfile = async (data, token) => {
   return res
 };
 // Editar usuario 
-export const updateUserProfile = async (id, userData, token) => {
+export const updateUserProfile = async (user_id, userData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
     }
   };
-  return axios.put(`${API_URL}/api/users/profile`, userData, config);
+  const res = await axios.put(`${API_URL}/api/users/${user_id}`, userData, config);
+  return res
 };
 
 // Mostrar artistas 

@@ -1,0 +1,15 @@
+.blackWhiteCard {
+    background-color: #f0f0f0; /* Color de fondo para Black & White */
+  }
+  
+  .realistaCard {
+    background-color: #ff0505; /* Color de fondo para Realista */
+  }
+  
+  .pircingCard {
+    background-color: #00ff00; /* Color de fondo para Pircing */
+  }
+  
+  .laserCard {
+    background-color: #e6f7ff; /* Color de fondo para Laser */
+  }
