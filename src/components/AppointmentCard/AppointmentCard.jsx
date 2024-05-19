@@ -4,7 +4,7 @@ import Pircing from "../../img/pircing.jpg";
 import Laser from "../../img/laser.jpeg";
 import BandW from "../../img/BandW.jpg";
 import Realista from "../../img/realista.jpg";
-import "./AppointmentCard.css"
+import "./AppointmentCard.css";
 
 const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
   const [showEditModal, setShowEditModal] = useState(false);
@@ -44,7 +44,9 @@ const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
 
   const formatDatetimeLocal = (dateString) => {
     const date = new Date(dateString);
-    return date.toISOString().slice(0, 16);
+    const timezoneOffset = date.getTimezoneOffset() * 60000; // in milliseconds
+    const localDate = new Date(date.getTime() - timezoneOffset);
+    return localDate.toISOString().slice(0, 16);
   };
 
   const handleShowEditModal = () => {
@@ -101,7 +103,7 @@ const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
           <br />
           Hora: {formatTime(appointment.datetime)}
           <br />
-          Artista: {appointment.artist.name} 
+          Artista: {appointment.artist.name}
           <br />
           Estado: {appointment.status}
         </Card.Text>

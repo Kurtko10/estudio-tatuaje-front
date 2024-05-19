@@ -90,13 +90,14 @@ const AdminAppointments = () => {
 
   const handleOpenModal = async (appointment, isCreating = false) => {
     try {
+      const response = await getAllArtists();
+      const fetchedArtists = response[0];
+      setArtists(fetchedArtists);
+      
       if (!isCreating) {
         const selectedAppointment = appointments.find(appt => appt.id === appointment.id);
         if (selectedAppointment) {
-          const response = await getAllArtists();
-          const fetchedArtists = response[0];
           const filtered = fetchedArtists.filter(artist => artist.specialty.toUpperCase() === selectedAppointment.service.name.toUpperCase());
-          setArtists(fetchedArtists);
           setFilteredArtists(filtered);
 
           const appointmentDatetime = new Date(selectedAppointment.datetime);
@@ -129,7 +130,6 @@ const AdminAppointments = () => {
           artist_id: "",
           client_id: ""
         });
-        setArtists([]);
         setFilteredArtists([]);
       }
       setShowModal(true);
@@ -148,19 +148,12 @@ const AdminAppointments = () => {
     setCurrentPage(page);
   };
 
-  const handleServiceChange = async (e) => {
+  const handleServiceChange = (e) => {
     const selectedService = e.target.value;
-    const serviceId = ArtistService[selectedService.toUpperCase()].id;
+    const serviceId = ArtistService[selectedService.toUpperCase()]?.id || "";
     setFormData(prev => ({ ...prev, service_id: serviceId }));
-    try {
-      const response = await getAllArtists();
-      const fetchedArtists = response[0];
-      const filtered = fetchedArtists.filter(artist => artist.specialty.toUpperCase() === selectedService.toUpperCase());
-      setArtists(fetchedArtists);
-      setFilteredArtists(filtered);
-    } catch (error) {
-      console.log("Error fetching artists:", error);
-    }
+    const filtered = artists.filter(artist => artist.specialty.toUpperCase() === selectedService.toUpperCase());
+    setFilteredArtists(filtered);
   };
 
   const handleInputChange = (e) => {
@@ -170,6 +163,10 @@ const AdminAppointments = () => {
 
   const handleCreateAppointment = async () => {
     try {
+      if (!formData.artist_id) {
+        alert("Por favor, selecciona un artista.");
+        return;
+      }
       await createAppointment(formData, token);
       setShowNewAppointmentModal(false);
       getAppointments();
@@ -344,8 +341,7 @@ const AdminAppointments = () => {
                     name="artist_id" 
                     value={formData.artist_id} 
                     onChange={handleInputChange} 
-                    required 
-                    disabled={!showNewAppointmentModal}
+                    required
                   >
                     {filteredArtists.map(artist => (
                       <option key={artist.id} value={artist.id}>{artist.user.firstName} {artist.name}</option>

@@ -1,42 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfile, selectUserData } from "../../app/slices/userSlice";
-import {getUserData } from "../../app/slices/userSlice";
+import { getUserData } from "../../app/slices/userSlice";
 import { Form, Card, Row, Col, Button } from "react-bootstrap";
 import { bringProfile } from "../../service/apiCalls";
 import { CustomInput } from "../../components/CusstomInput/CustomInput";
 import ButtonCita from "../../components/ButtonCita/ButtonCita";
 import SocialIcons from "../../components/SocialIcons/SocialIcons";
 import BootstrapModal from "../../components/BootstrapModal/BootstrapModal";
-//import { updateProfile } from "../../app/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
-//---------------------------------------------------------
+import { inputValidator } from "../../utils/validator";
 
 export const Profile = () => {
-
-    const [profileData, setProfileData] = useState({
-        name: "",
-        email: "",
-        lastname: ""
-      });  
+  const [profileData, setProfileData] = useState({
+    name: "",
+    email: "",
+    lastname: ""
+  });
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [isPasswordInputDisabled, setIsPasswordInputDisabled] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  //const userData = useSelector((state) => state.user.userData);
-  const myPassport = useSelector(getUserData)
+  const myPassport = useSelector(getUserData);
   const token = myPassport.token;
   const [userData, setUserData] = useState();
   const [userName, setUserName] = useState("");
   const [updateData, setUpdateData] = useState({});
-  //const [showProfileModal, setShowProfileModal] = useState(false);
-  
+  const [passwordData, setPasswordData] = useState({
+    newPassword: '',
+  });
+  const [passwordErrors, setPasswordErrors] = useState({
+    newPassword: '',
+  });
 
   const inputHandler = (e) => {
-    setUpdateData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    if (name === 'newPassword') {
+      setPasswordData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+      setPasswordErrors((prevState) => ({
+        ...prevState,
+        [name]: inputValidator(value, name),
+      }));
+    } else {
+      setUpdateData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   useEffect(() => {
@@ -48,7 +63,7 @@ export const Profile = () => {
         }
         const myProfileData = await bringProfile(token);
         setUserData(myProfileData.data);
-        setProfileData(myProfileData.data); 
+        setProfileData(myProfileData.data);
       } catch (error) {
         console.log("Error al obtener el perfil:", error);
       }
@@ -56,129 +71,135 @@ export const Profile = () => {
     fetchProfile();
   }, [token]);
 
-
   const handleSaveChanges = async () => {
-      try {
-          await dispatch(updateProfile({ updateData, token }));
-          
-          setUserData(updateData);
+    try {
+      const dataToUpdate = { ...updateData };
+      if (!isPasswordInputDisabled) {
+        dataToUpdate.newPassword = passwordData.newPassword;
+      }
+      await dispatch(updateProfile({ updateData: dataToUpdate, token }));
+      setUserData(updateData);
+      setIsPasswordInputDisabled(true);
     } catch (error) {
       console.log("Error al actualizar el usuario:", error);
     }
   };
 
-const resetLoggedCount = () => {
-    console.log(veces)
-  }
+  const togglePasswordInput = () => {
+    setIsPasswordInputDisabled(!isPasswordInputDisabled);
+  };
 
-if (!token) {
+  if (!token) {
     console.log("adios");
     return null;
   }
 
   return (
-<>
-  <div className="justify-content-center text-center profile-container">
-    <ButtonCita className="button-cita" text="<  Pedir Cita  >" />
-    <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
-    <Form id="formProfile">
-      <div className="titleProfile">{userData?.firstName}, aquí está tu perfil</div>
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3" controlId="formName">
-            <Form.Label>Nombre:</Form.Label>
-            <CustomInput
-              typeProp="name"
-              nameProp="firstName"
-              placeholderProp={userData?.firstName}
-              valueProp={userData?.firstName}
-              isDisabled={true}
-              disableValidation={true}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3" controlId="formLastname">
-            <Form.Label>Apellidos:</Form.Label>
-            <CustomInput
-              typeProp="lastname"
-              nameProp="lastName"
-              placeholderProp={userData?.lastName}
-              valueProp={userData?.lastName}
-              isDisabled={true}
-              disableValidation={false}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3" controlId="formEmail">
-            <Form.Label>Email:</Form.Label>
-            <CustomInput
-              typeProp="email"
-              nameProp="email"
-              placeholderProp={userData?.email}
-              valueProp={userData?.email}
-              isDisabled={true}
-              handlerProp={inputHandler}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3" controlId="formPhone">
-            <Form.Label>Teléfono:</Form.Label>
-            <CustomInput
-              typeProp="text"
-              nameProp="phone"
-              placeholderProp={userData?.phone || ""}
-              valueProp={userData?.phone || ""}
-              isDisabled={true}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3" controlId="formProvincia">
-            <Form.Label>Provincia:</Form.Label>
-            <CustomInput
-              typeProp="text"
-              nameProp="provincia"
-              placeholderProp={userData?.clients?.provincia || ""}
-              valueProp={userData?.clients?.provincia || ""}
-              isDisabled={true}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3" controlId="formClientsId">
-            <Form.Label>Num. cliente:</Form.Label>
-            <CustomInput
-              typeProp="text"
-              nameProp="clientsId"
-              placeholderProp={`Número de cliente: ${userData?.clients?.id || ""}`}
-              valueProp={userData?.clients?.id || ""}
-              isDisabled={true}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-    </Form>
-    <BootstrapModal
-  profileData={userData} 
-  token={token}
-  inputHandler={inputHandler}
-  handleSaveChanges={handleSaveChanges} 
-  setUserData={setUserData}
-  updateData={updateData}
-/>
-    <Button variant="danger" onClick={() => navigate("/appointments")}>Citas</Button>
-  </div>
-</>
-    );
-}; 
-
+    <>
+      <div className="justify-content-center text-center profile-container">
+        <ButtonCita className="button-cita" text="<  Pedir Cita  >" />
+        <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
+        <Form id="formProfile">
+          <div className="titleProfile">{userData?.firstName}, aquí está tu perfil</div>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="formName">
+                <Form.Label>Nombre:</Form.Label>
+                <CustomInput
+                  typeProp="name"
+                  nameProp="firstName"
+                  placeholderProp={userData?.firstName}
+                  valueProp={userData?.firstName}
+                  isDisabled={true}
+                  disableValidation={true}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="formLastname">
+                <Form.Label>Apellidos:</Form.Label>
+                <CustomInput
+                  typeProp="lastname"
+                  nameProp="lastName"
+                  placeholderProp={userData?.lastName}
+                  valueProp={userData?.lastName}
+                  isDisabled={true}
+                  disableValidation={false}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="formEmail">
+                <Form.Label>Email:</Form.Label>
+                <CustomInput
+                  typeProp="email"
+                  nameProp="email"
+                  placeholderProp={userData?.email}
+                  valueProp={userData?.email}
+                  isDisabled={true}
+                  handlerProp={inputHandler}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="formPhone">
+                <Form.Label>Teléfono:</Form.Label>
+                <CustomInput
+                  typeProp="text"
+                  nameProp="phone"
+                  placeholderProp={userData?.phone || ""}
+                  valueProp={userData?.phone || ""}
+                  isDisabled={true}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="formProvincia">
+                <Form.Label>Provincia:</Form.Label>
+                <CustomInput
+                  typeProp="text"
+                  nameProp="provincia"
+                  placeholderProp={userData?.clients?.provincia || ""}
+                  valueProp={userData?.clients?.provincia || ""}
+                  isDisabled={true}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3" controlId="formClientsId">
+                <Form.Label>Num. cliente:</Form.Label>
+                <CustomInput
+                  typeProp="text"
+                  nameProp="clientsId"
+                  placeholderProp={`Número de cliente: ${userData?.clients?.id || ""}`}
+                  valueProp={userData?.clients?.id || ""}
+                  isDisabled={true}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+        <BootstrapModal
+          profileData={userData}
+          token={token}
+          inputHandler={inputHandler}
+          handleSaveChanges={handleSaveChanges}
+          setUserData={setUserData}
+          updateData={updateData}
+          isPasswordInputDisabled={isPasswordInputDisabled}
+          passwordErrors={passwordErrors}
+          togglePasswordInput={togglePasswordInput}
+          passwordData={passwordData}
+        />
+        <Button variant="danger" onClick={() => navigate("/appointments")}>Citas</Button>
+      </div>
+    </>
+  );
+};
 
 
 

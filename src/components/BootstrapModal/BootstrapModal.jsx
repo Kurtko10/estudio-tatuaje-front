@@ -1,33 +1,28 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { CustomInput } from "../CusstomInput/CustomInput";
 import { updateProfile } from "../../service/apiCalls";
 import { inputValidator } from "../../utils/validator";
-import  "./BootstrapModal.css";
+import "./BootstrapModal.css";
 
 function BootstrapModal({ profileData, token, setUserData }) {
   const [show, setShow] = useState(false);
-  const [updatedData, setUpdatedData] = useState(profileData);
+  const [updatedData, setUpdatedData] = useState(profileData || {});
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [hasChanges, setHasChanges] = useState(false);
-
+  const [isPasswordInputDisabled, setIsPasswordInputDisabled] = useState(true);
+  const [passwordData, setPasswordData] = useState({ newPassword: '' });
+  const [passwordError, setPasswordError] = useState("");
 
   const handleClose = () => {
     setShow(false);
-
-    const updatedProfileData = { ...profileData };
-  
-    for (const key in updatedData) {
-      if (updatedData.hasOwnProperty(key) && updatedData[key] !== profileData[key]) {
-        updatedProfileData[key] = updatedData[key];
-      }
-    }
-  
-    setUpdatedData(updatedProfileData);
+    setUpdatedData(profileData || {});
     setFormSubmitted(false);
     setEmailError("");
+    setPasswordError("");
   };
   
   const handleShow = () => setShow(true);
@@ -35,15 +30,21 @@ function BootstrapModal({ profileData, token, setUserData }) {
   const inputHandler = (e) => {
     const { name, value } = e.target;
   
-    if (value !== profileData[name] && value !== undefined) {
-      setUpdatedData({ ...updatedData, [name]: value });
-    }
+    if (name === "newPassword") {
+      setPasswordData({ ...passwordData, [name]: value });
+      setPasswordError(inputValidator(value, "password", "password"));
+      setHasChanges(true); // Asegúrate de que detectamos cambios en la contraseña
+    } else {
+      if (value !== profileData[name] && value !== undefined) {
+        setUpdatedData({ ...updatedData, [name]: value });
+      }
   
-    if (name === "email") {
-      const errorMessage = inputValidator(value, "email", "email");
-      setEmailError(errorMessage);
+      if (name === "email") {
+        const errorMessage = inputValidator(value, "email", "email");
+        setEmailError(errorMessage);
+      }
+      setHasChanges(true);
     }
-    setHasChanges(true);
   };
 
   const handleUpdate = async () => {
@@ -55,6 +56,10 @@ function BootstrapModal({ profileData, token, setUserData }) {
         if (value !== profileData[key]) {
           changes[key] = value;
         }
+      }
+
+      if (!isPasswordInputDisabled && passwordData.newPassword) {
+        changes.newPassword = passwordData.newPassword;
       }
   
       if (Object.keys(changes).length === 0) {
@@ -72,16 +77,32 @@ function BootstrapModal({ profileData, token, setUserData }) {
 
       const updatedUserData = { ...profileData, ...changes };
       setUserData(updatedUserData);
-      console.log(profileData, "perfil original");
   
       await updateProfile(changes, token);
-      console.log(updatedData, "cambiosssss");
   
       handleClose();
     } catch (err) {
       console.log("Error al actualizar el usuario:", err);
     }
   };
+
+  const togglePasswordInput = () => {
+    setIsPasswordInputDisabled(!isPasswordInputDisabled);
+    if (isPasswordInputDisabled) {
+      setPasswordData({ newPassword: '' });
+    }
+    setHasChanges(true); // Asegúrate de que detectamos cambios cuando se habilita/deshabilita el campo de contraseña
+  };
+
+  useEffect(() => {
+    if (profileData && updatedData) {
+      const hasProfileChanges = Object.keys(updatedData).some(
+        key => updatedData[key] !== profileData[key]
+      );
+      const hasPasswordChanges = !isPasswordInputDisabled && passwordData.newPassword;
+      setHasChanges(hasProfileChanges || hasPasswordChanges);
+    }
+  }, [updatedData, passwordData, isPasswordInputDisabled, profileData]);
 
   return (
     <>
@@ -118,11 +139,10 @@ function BootstrapModal({ profileData, token, setUserData }) {
             isDisabled={false}
             handlerProp={inputHandler}
             onBlurHandler={() => {
-    // Validar el formato del correo electrónico al dejar de hacer focus
               const errorMessage = inputValidator(updatedData.email, "email", "email");
               setEmailError(errorMessage);
             }}
-              errorMessage={emailError}
+            errorMessage={emailError}
           />
           <CustomInput
             typeProp="text"
@@ -153,12 +173,24 @@ function BootstrapModal({ profileData, token, setUserData }) {
             isDisabled={true}
             handlerProp={inputHandler}
           />
+          <CustomInput
+            typeProp="password"
+            nameProp="password"
+            placeholderProp="Introduce tu nueva contraseña"
+            valueProp={passwordData.password}
+            isDisabled={isPasswordInputDisabled}
+            handlerProp={inputHandler}
+            errorText={passwordError}
+          />
+          <Button variant="secondary" onClick={togglePasswordInput}>
+            {isPasswordInputDisabled ? "Cambiar Contraseña" : "Cancelar"}
+          </Button>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleUpdate} disabled={!hasChanges || emailError}>
+          <Button variant="primary" onClick={handleUpdate} disabled={!hasChanges || emailError || passwordError}>
             Guardar cambios
           </Button>
         </Modal.Footer>
