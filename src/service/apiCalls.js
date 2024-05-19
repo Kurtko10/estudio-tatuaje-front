@@ -1,8 +1,7 @@
 import axios from "axios";
 
-//const API_RM_URL = "https://rickandmortyapi.com/api"
+
 const API_URL = "http://localhost:3010"
-// const API_URL = "aquí hay una url para un entorno de desarrollo"
 
 // Registro nuevo usuario
 export const registerNewUserCall = async (credentials) => {
@@ -17,15 +16,12 @@ export const createNewUserCall = async (userData,token) => {
         Authorization: `Bearer ${token}`
     }
 }
-console.log("estoy crando");
-console.log(userData);
   return await axios.post(`${API_URL}/api/users/`,userData, config);
 };
 // Login de usuario
 export const loginCall = async (credentials) => {
-    // console.log(credentials);
     const res = await axios.post(`${API_URL}/api/auth/login`, credentials);
-    console.log(res);
+    
     return res;
 
 };
@@ -38,7 +34,7 @@ export const bringProfile = async (token) => {
       }
   }
   const res = await axios.get(`${API_URL}/api/users/profile/profile`, config);
-  console.log(res, "bringProfile Function");
+
   return res;
   
 };
@@ -52,8 +48,6 @@ export const updateProfile = async (data, token) => {
     }
   }
   const res = await axios.put(`${API_URL}/api/users/profile`, data, config)
-  console.log(res, "yo soy updateProfile")
-  console.log(token);
   return res
 };
 // Editar usuario 
@@ -155,7 +149,6 @@ export const deleteAppointmentById = async (id, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(token);
     return response.data;
   } catch (error) {
     throw error;
@@ -176,9 +169,7 @@ export const updateAppointmentById = async (id, token, appointmentData) => {
 };
 
 export const createAppointment = async (appointmentData, token) => {
-  try {
-    console.log(appointmentData);
-  
+  try {  
     const response = await axios.post(`${API_URL}/api/appointments`, appointmentData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -186,7 +177,7 @@ export const createAppointment = async (appointmentData, token) => {
     });
     return response.data;
   } catch (error) {
-    console.log(appointmentData);
+
     throw error;
   }
 };

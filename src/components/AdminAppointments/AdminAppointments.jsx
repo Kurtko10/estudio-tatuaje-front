@@ -45,7 +45,7 @@ const AdminAppointments = () => {
       const appointmentsData = await getAllAppointments(token);
       setAppointments(appointmentsData);
     } catch (error) {
-      console.log('Error al obtener todas las citas:', error);
+      
     }
   };
 
@@ -57,7 +57,7 @@ const AdminAppointments = () => {
       await deleteAppointmentById(appointmentId, token);
       getAppointments();
     } catch (error) {
-      console.log('Error al eliminar la cita:', error);
+      alert('Hubo un error al intentar eliminar la cita.');
     }
   };
 
@@ -72,7 +72,8 @@ const AdminAppointments = () => {
       getAppointments();
       setShowModal(false);
     } catch (error) {
-      console.log('Error al actualizar la cita:', error);
+      
+      alert('Hubo un error al intentar actualizar la cita.');
     }
   };
 
@@ -171,8 +172,8 @@ const AdminAppointments = () => {
       setShowNewAppointmentModal(false);
       getAppointments();
     } catch (error) {
-      console.log("Error creating appointment:", error);
-      alert("Error creating appointment:");
+      
+      alert("Error al crear la cita");
     }
   };
 

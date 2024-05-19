@@ -74,11 +74,12 @@ const Appointments = () => {
       const profileData = await bringProfile(token);
       const clientId = profileData.data?.clients?.id;
       const userRole = profileData.data?.role?.name; 
-      console.log('User role:', userRole);
+      
       setRole(userRole);
       setClientId(clientId);
     } catch (error) {
-      console.log("Error al obtener los datos del cliente:", error);
+      
+      alert('Error al obtener los datos');
     }
   };
 
@@ -90,10 +91,10 @@ const Appointments = () => {
       } else {
         appointmentsData = await getAppointmentsByClientId(token);
       }
-      console.log('Appointments data:', appointmentsData); // Log the appointments data
+      
       setAppointments(appointmentsData || []);
     } catch (error) {
-      console.log("Error al obtener las citas:", error);
+      alert('Hubo un error al obtener las citas');
     }
   };
 
@@ -105,7 +106,8 @@ const Appointments = () => {
       await deleteAppointmentById(appointmentId, token);
       getAppointments();
     } catch (error) {
-      console.log("Error al eliminar la cita:", error);
+      
+      alert('Hubo un error al intentar eliminar la cita.');
     }
   };
 
@@ -114,7 +116,7 @@ const Appointments = () => {
       await updateAppointmentById(appointmentId, token, { datetime: editData.datetime });
       getAppointments();
     } catch (error) {
-      console.log("Error al actualizar la cita:", error);
+      alert('Hubo un error al intentar actualizar la cita.');
     }
   };
 
@@ -169,7 +171,7 @@ const Appointments = () => {
       setFormData((prevState) => ({ ...prevState, client_id: clientId }));
       setShowNewAppointmentModal(true);
     } else {
-      console.log("Client ID is undefined");
+      alert('ID cliente no encontrado');
     }
   };
 
@@ -184,7 +186,8 @@ const Appointments = () => {
       setArtists(fetchedArtists);
       setFilteredArtists(filtered);
     } catch (error) {
-      console.log("Error fetching artists:", error);
+      alert('Hubo un error al recuperar artistas');
+      
     }
   };
 
@@ -199,7 +202,8 @@ const Appointments = () => {
       setShowNewAppointmentModal(false);
       getAppointments(); 
     } catch (error) {
-      console.log("Error creating appointment:", error);
+      alert('Hubo un error al intentar crear la cita.');
+
     }
   };
 
@@ -220,7 +224,7 @@ const Appointments = () => {
   ];
 
   const formattedAppointments = appointments.map(appointment => {
-    console.log('Formatting appointment:', appointment);
+    
     return {
       id: appointment.id,
       clientId: appointment.client?.id || '',
@@ -229,8 +233,6 @@ const Appointments = () => {
       datetime: formatDateTime(appointment.datetime),
     };
   });
-
-  console.log('Formatted appointments:', formattedAppointments);
 
   return (
     <div className="appointments-container">

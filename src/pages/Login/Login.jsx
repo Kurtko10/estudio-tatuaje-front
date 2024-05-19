@@ -1,8 +1,7 @@
 
-
 import React, { useState } from "react";
-import { useDispatch } from "react-redux"; // Importa useDispatch para despachar acciones
-import { login } from "../../app/slices/userSlice"; // Importa la acción de inicio de sesión
+import { useDispatch } from "react-redux";
+import { login } from "../../app/slices/userSlice";
 import { decodeToken } from "react-jwt";
 import { loginCall } from "../../service/apiCalls";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,7 @@ import SocialIcons from "../../components/SocialIcons/SocialIcons";
 import "./Login.css";
 
 const Login = () => {
-  const dispatch = useDispatch(); // Obtiene la función dispatch del store Redux
+  const dispatch = useDispatch();
   const navigate = useNavigate();  
   const [credentials, setCredentials] = useState({
     email: "",
@@ -71,7 +70,8 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      
+      alert('Error de login');
     }
   };
   const handleRegister = () => {

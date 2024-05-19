@@ -20,7 +20,6 @@ const persistConfig = {
 
 const persistedReducer = persistReducer (persistConfig, reducers)
 
-//magia arcana
 export default configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => 

@@ -72,7 +72,6 @@ export const Home = () => {
     <div className="home-page">
       <SocialIcons urls={["https://whatsapp.com/", "https://tiktok.com/", "https://instagram.com/"]} />
       <ButtonCita text="Crear Nueva Cita" className="button-cita" showModal={true} />
-      {/* <ScrollToTop smooth className="scrollToTop" /> */}
       <div id="home" className="section container-fluid d-flex justify-content-center align-items-center">
       
       <Container fluid>

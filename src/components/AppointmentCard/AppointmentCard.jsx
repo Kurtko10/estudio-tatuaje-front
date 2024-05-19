@@ -44,7 +44,7 @@ const AppointmentCard = ({ appointment, onDelete, onEdit }) => {
 
   const formatDatetimeLocal = (dateString) => {
     const date = new Date(dateString);
-    const timezoneOffset = date.getTimezoneOffset() * 60000; // in milliseconds
+    const timezoneOffset = date.getTimezoneOffset() * 60000;
     const localDate = new Date(date.getTime() - timezoneOffset);
     return localDate.toISOString().slice(0, 16);
   };

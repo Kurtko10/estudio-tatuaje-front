@@ -65,7 +65,7 @@ export const Profile = () => {
         setUserData(myProfileData.data);
         setProfileData(myProfileData.data);
       } catch (error) {
-        console.log("Error al obtener el perfil:", error);
+        alert('Error al obtener el perfil');
       }
     };
     fetchProfile();
@@ -81,7 +81,7 @@ export const Profile = () => {
       setUserData(updateData);
       setIsPasswordInputDisabled(true);
     } catch (error) {
-      console.log("Error al actualizar el usuario:", error);
+      alert('Error al actualizar el usuario');
     }
   };
 
@@ -90,7 +90,6 @@ export const Profile = () => {
   };
 
   if (!token) {
-    console.log("adios");
     return null;
   }
 

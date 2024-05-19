@@ -41,7 +41,7 @@ export const Users = () => {
 
   useEffect(() => {
     if (userData.decodificado.userRole !== "admin" && userData.decodificado.userRole !== "artist") {
-      navigate("/"); // Redirigir al usuario si no tiene permiso
+      navigate("/");
     }
   }, [userData.decodificado.userRole, navigate]);
 
@@ -56,32 +56,25 @@ export const Users = () => {
         setAllUserProfiles(profiles);
       })
       .catch((error) => {
-        console.log("Error al obtener perfiles de usuarios:", error);
-        console.log(token);
+        alert('Error al obtener los perfiles.');
       });
   }, [token]);
 
   const handleUserClick = async (userId, isCreating = false) => {
     setIsCreating(isCreating);
-    console.log(userId);
-    console.log(isCreating);
     if (isCreating) {
-      // Reset selected user to null for creating a new user
       setSelectedUser(null);
       setShowModal(true);
     } else {
       try {
         const userData = await getUserById(userId, token);
-        console.log(userData);
-        console.log(userData.role.name);
         setSelectedUser(userData);
         setShowModal(true);
       } catch (error) {
-        console.log("Error al obtener detalles del usuario:", error);
+        alert('Error al obtener el usuario');
         navigate("/");
       }
     }
-    console.log(isCreating);
   };
 
   const handleCloseModal = () => {
@@ -108,13 +101,12 @@ export const Users = () => {
   const deleteUser = async (id) => {
     try {
       const response = await deleteUserById(id, token);
-      console.log("Usuario eliminado:", response);
       const updatedProfiles = await getAllUserProfiles(token);
       setUserProfiles(updatedProfiles);
       setAllUserProfiles(updatedProfiles);
       handleCloseModal();
     } catch (error) {
-      console.log("Error al eliminar el usuario:", error);
+      alert('Hubo un error al intentar eliminar el usuario.');
     }
   };
 
@@ -126,15 +118,13 @@ export const Users = () => {
       setAllUserProfiles(updatedProfiles);
       setShowModal(false);
       setIsCreating(false);
-      console.log(response);
     } catch (error) {
-      console.error("Error al crear el usuario:", error);
+      alert('Error al crear usuario');
     }
   };
 
   const updateUser = async (updatedUserData) => {
     try {
-      console.log(updatedUserData.id);
       const payload = { ...updatedUserData, user_id: updatedUserData.id };
       const response = await updateUserProfile(updatedUserData.id, payload, token);
       const updatedUserProfiles = userProfiles.map(user =>
@@ -143,7 +133,7 @@ export const Users = () => {
       setUserProfiles(updatedUserProfiles);
       setShowModal(false);
     } catch (error) {
-      console.error("Error al actualizar el usuario:", error);
+      alert('Error al actualizar el usuario.');
     }
   };
 

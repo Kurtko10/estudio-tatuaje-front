@@ -33,7 +33,7 @@ function BootstrapModal({ profileData, token, setUserData }) {
     if (name === "newPassword") {
       setPasswordData({ ...passwordData, [name]: value });
       setPasswordError(inputValidator(value, "password", "password"));
-      setHasChanges(true); // Asegúrate de que detectamos cambios en la contraseña
+      setHasChanges(true);
     } else {
       if (value !== profileData[name] && value !== undefined) {
         setUpdatedData({ ...updatedData, [name]: value });
@@ -82,7 +82,7 @@ function BootstrapModal({ profileData, token, setUserData }) {
   
       handleClose();
     } catch (err) {
-      console.log("Error al actualizar el usuario:", err);
+      alert('Hubo un error al actualizar');
     }
   };
 
@@ -91,7 +91,7 @@ function BootstrapModal({ profileData, token, setUserData }) {
     if (isPasswordInputDisabled) {
       setPasswordData({ newPassword: '' });
     }
-    setHasChanges(true); // Asegúrate de que detectamos cambios cuando se habilita/deshabilita el campo de contraseña
+    setHasChanges(true);
   };
 
   useEffect(() => {

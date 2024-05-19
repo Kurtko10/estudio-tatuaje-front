@@ -120,17 +120,16 @@ export const Register = () => {
         setMsg("¡Gracias por registrarte!")
         setTimeout(() => {
           
-          setMsg(""); // Limpiar el mensaje si no hay error
+          setMsg("");
           navigate("/login");
         }, 3000);
       } catch (error) {
-        console.log("Error al registrar el usuario:", error.response.data.message);
         setMsg("Error al registrar el usuario ");
       }
     } else {
-      console.log("Credenciales incorrectas, algún campo no está bien introducido");
+      alert('Algún campo no está bien introducido');
     }
-    console.log(credentials);
+
   };
   
   return (

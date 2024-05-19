@@ -2,7 +2,6 @@
 import "./UsersCard.css";
 
 export const UserCard = ({ user, handleClick }) => {
-  //console.log("Datos del usuario en JSON:", JSON.stringify(user, null, 2));
   return (
     <div className="user-card" onClick={handleClick}>
       <h4>{`${user.firstName}`}</h4>

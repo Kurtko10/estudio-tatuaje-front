@@ -22,12 +22,11 @@ export const Artists = () => {
     getAllArtists()
       .then((response) => {
         const fetchedArtists = response[0];
-        console.log(fetchedArtists);
         setArtists(fetchedArtists);
         setFilteredArtists(fetchedArtists); // Inicialmente, mostrar todos los artistas
       })
       .catch((error) => {
-        console.log("Error fetching artists:", error);
+        alert('Hubo un error al recuperar los artistas');
       });
   }, []);
 
@@ -37,7 +36,7 @@ export const Artists = () => {
       setSelectedArtist(selected);
       setShowModal(true);
     } else {
-      console.log("No se encontró el artista con id:", artistId);
+      alert('Artista no encontrado.');
     }
   };
 

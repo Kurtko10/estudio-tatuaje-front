@@ -81,7 +81,7 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
 
   const roleSpecificFields = (roleId) => {
     switch (roleId) {
-      case '2': // Artist
+      case '2': 
         return (
           <>
             <Form.Group controlId="formSpecialtySelect">
@@ -95,7 +95,7 @@ export const UserDetailsModal = ({ show, userData, onClose, deleteUser, onSave, 
             </Form.Group>
           </>
         );
-      case '3': // Client
+      case '3': 
         return (
           <>
             <CustomInput
