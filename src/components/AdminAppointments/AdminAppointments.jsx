@@ -172,6 +172,7 @@ const AdminAppointments = () => {
       getAppointments();
     } catch (error) {
       console.log("Error creating appointment:", error);
+      alert("Error creating appointment:");
     }
   };
 

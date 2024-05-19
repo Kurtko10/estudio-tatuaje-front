@@ -30,7 +30,7 @@ function Header() {
 
   const handleLogout = () => {
     
-    console.log("Bye, Bye");
+    
     dispatch(logout());
     navigate("/");
   };
@@ -77,7 +77,7 @@ function Header() {
   useEffect(() => {
     if (isLoggedIn) {
       
-      console.log( userData.decodificado.userRole);
+      //console.log( userData.decodificado.userRole);
         
     }
   }, [isLoggedIn]);

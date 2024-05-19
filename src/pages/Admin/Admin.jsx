@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -34,7 +32,7 @@ const Admin = () => {
 
         <Routes>
           <Route path="/appointments" element={<AdminAppointments />} />
-          {/* Otras rutas específicas para el administrador */}
+         
         </Routes>
       </div>
     </div>

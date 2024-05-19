@@ -204,6 +204,20 @@ export const getAllAppointments = async (token) => {
   }
 };
 
+export const getAppointmentsByArtistId = async (token) => {
+  const response = await fetch(`${API_URL}/api/appointments/artist/`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error fetching appointments by artist');
+  }
+
+  return await response.json();
+};
 
 
 

@@ -64,6 +64,9 @@ export const Home = () => {
 
     return () => clearInterval(interval);
   }, []);
+  const handleArtistsClick = () => {
+    navigate('/artists');
+  };
 
   return (
     <div className="home-page">
@@ -170,8 +173,7 @@ export const Home = () => {
       <ButtonC
             title={"ARTISTAS"}
             className={"regularButtonClass"}
-            
-            
+            onClick={handleArtistsClick}
           />
     </Container>
       </div>

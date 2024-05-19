@@ -60,8 +60,7 @@ export const fetchUserProfile = (token) => async (dispatch) => {
       const profileData = await bringProfile(token);
       dispatch(setUserData(profileData.data));
     } catch (error) {
-      console.log("Error al obtener el perfil:", error);
-      // Manejo del error
+     
     }
   };
 
