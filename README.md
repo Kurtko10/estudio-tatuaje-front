@@ -48,7 +48,7 @@ Recrea la parte frontend de un estudio de tatuajes, con gestión de usuarios y c
 
 - Usuarios: Registrarse y luego iniciar sesión para acceder a su área de cliente.
 - Administradores: Iniciar sesión con credenciales de administrador para acceder a las funcionalidades administrativas.
-- 
+
 ### Capturas de pantalla de la aplicación:
 - Login
 📸 ![login](./src/img/Captura%20de%20pantalla%202024-05-19%20202525.jpg)
@@ -65,12 +65,12 @@ Recrea la parte frontend de un estudio de tatuajes, con gestión de usuarios y c
 
 🌟 Mejoras
 
-Implementar avisos de errores.
-Incluir una foto de usuario.
-Formulario de contacto.
-Sistema de reseñas y valoraciones.
-Mejora de la interfaz de usuario.
+- Implementar avisos de errores.
+- Incluir una foto de usuario.
+- Formulario de contacto.
+- Sistema de reseñas y valoraciones.
+- Mejora de la interfaz de usuario.
 
 📧 Contribuciones
-¡Las contribuciones son bienvenidas! Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+¡Las contribuciones son bienvenidas!
 
