@@ -51,7 +51,7 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
           </a>
         </li>
         <li className='sidebar-list-item'>
-          <a href="">
+          <a href="/profile">
             <BsFillGearFill className='icon' /> <span>SETTING</span>
           </a>
         </li>

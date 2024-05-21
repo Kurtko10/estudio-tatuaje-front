@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfile, selectUserData } from "../../app/slices/userSlice";
@@ -34,6 +35,7 @@ export const Profile = () => {
   const [passwordErrors, setPasswordErrors] = useState({
     newPassword: '',
   });
+  const [role, setRole] = useState(myPassport.role?.name || '');
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
@@ -64,6 +66,7 @@ export const Profile = () => {
         const myProfileData = await bringProfile(token);
         setUserData(myProfileData.data);
         setProfileData(myProfileData.data);
+        setRole(myProfileData.data.role?.name); // Set the role from the profile data
       } catch (error) {
         alert('Error al obtener el perfil');
       }
@@ -194,11 +197,11 @@ export const Profile = () => {
           togglePasswordInput={togglePasswordInput}
           passwordData={passwordData}
         />
-        <Button variant="danger" onClick={() => navigate("/appointments")}>Citas</Button>
+        {role !== 'admin' && (
+          <Button variant="danger" onClick={() => navigate("/appointments")}>Citas</Button>
+        )}
       </div>
     </>
   );
 };
-
-
 
