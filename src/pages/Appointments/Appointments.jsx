@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Button, Modal, Container, Row, Col } from 'react-bootstrap';
@@ -223,8 +224,7 @@ const Appointments = () => {
     { field: 'datetime', headerName: 'Fecha y Hora' },
   ];
 
-  const formattedAppointments = appointments.map(appointment => {
-    
+  const formattedAppointments = filteredAppointments.map(appointment => {
     return {
       id: appointment.id,
       clientId: appointment.client?.id || '',
@@ -272,11 +272,6 @@ const Appointments = () => {
                 columns={columns}
                 handleUserClick={() => {}}
               />
-              <CustomPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
             </>
           ) : (
             <Row className="justify-content-center">
@@ -305,11 +300,6 @@ const Appointments = () => {
               </Col>
             )}
           </Row>
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
         </Container>
       )}
 
